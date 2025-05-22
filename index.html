@@ -1602,25 +1602,24 @@ Want to stay safe? Our store offers everything from self-defense gear to hidden 
 		// Replace service images with iframes
 document.addEventListener('DOMContentLoaded', () => {
   const serviceImages = document.querySelectorAll('.service-image');
-  
+
   serviceImages.forEach(container => {
     const img = container.querySelector('img');
     if (!img || !img.alt) return;
-    
-    const filename = img.alt
-      .toLowerCase()
-      .replace(/\s+/g,)
-      .concat('.html');
-      
+
+    // Decode alt and convert to clean URL path
+    const rawAlt = decodeURIComponent(img.alt); // converts %20 to spaces
+    const cleanPath = rawAlt.trim().replace(/\s+/g, '%20').concat('.html');
+
     const iframe = document.createElement('iframe');
     Object.assign(iframe, {
-      src: filename,
+      src: cleanPath,
       width: '100%',
       height: '400',
       loading: 'lazy'
     });
-    
-    iframe.style.cssText = 'border: none; border-radius: 5px; min-height: 400px;'; // Added min-height
+
+    iframe.style.cssText = 'border: none; border-radius: 5px; min-height: 400px;';
     container.innerHTML = '';
     container.appendChild(iframe);
   });
