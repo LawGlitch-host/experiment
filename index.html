@@ -1605,11 +1605,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
   serviceImages.forEach(container => {
     const img = container.querySelector('img');
-    if (!img || !img.alt) return;
+    const dataSrc = img?.getAttribute('data-src');
 
-    // Decode alt and convert to clean URL path
-    const rawAlt = decodeURIComponent(img.alt); // converts %20 to spaces
-    const cleanPath = rawAlt.trim().replace(/\s+/g, '%20').concat('.html');
+    if (!dataSrc) return;
+
+    // Clean up the path and add .html
+    const cleanPath = dataSrc.trim().replace(/\s+/g, '-').concat('.html');
 
     const iframe = document.createElement('iframe');
     Object.assign(iframe, {
@@ -1623,7 +1624,7 @@ document.addEventListener('DOMContentLoaded', () => {
     container.innerHTML = '';
     container.appendChild(iframe);
   });
-});
+})
     </script>
 </body>
 </html>
