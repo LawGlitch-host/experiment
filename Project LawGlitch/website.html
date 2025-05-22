@@ -1,0 +1,1630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawGlitch - Digital Resistance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Cinzel:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <style>
+        /* SECTION: Base Styles */
+        :root {
+            --black: #000000;
+            --dark-gray: #111111;
+            --medium-gray: #222222;
+            --light-gray: #333333;
+            --crimson: #dc143c;
+            --glow: 0 0 10px var(--crimson), 0 0 20px rgba(220, 20, 60, 0.5);
+            --text-glow: 0 0 5px var(--crimson), 0 0 10px rgba(220, 20, 60, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: var(--black);
+            color: white;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* SECTION: Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 32px;
+            height: 32px;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(0, 0) rotate(-45deg);
+            transition: transform 0.1s ease;
+            content: "🗡";
+            font-size: 24px;
+        }
+
+        .cursor-tail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            transition: transform 0.2s ease;
+        }
+
+        #app {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9997;
+            pointer-events: none;
+        }
+
+        /* SECTION: Navigation */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            text-shadow: var(--text-glow);
+        }
+
+        .hamburger {
+            width: 30px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        .hamburger div {
+            width: 100%;
+            height: 3px;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger.active div:nth-child(1) {
+            transform: translateY(8px) rotate(45deg);
+        }
+
+        .hamburger.active div:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active div:nth-child(3) {
+            transform: translateY(-8px) rotate(-45deg);
+        }
+
+        .nav-menu {
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 300px;
+            height: 100vh;
+            background-color: var(--dark-gray);
+            padding: 80px 20px 20px;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .nav-menu.active {
+            left: 0;
+        }
+
+        .nav-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 3px solid var(--crimson);
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .nav-menu a:hover {
+            background-color: rgba(220, 20, 60, 0.2);
+            border-left: 3px solid white;
+            text-shadow: var(--text-glow);
+        }
+
+        .get-started-btn {
+            background-color: var(--crimson);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--glow);
+        }
+
+        .get-started-btn:hover {
+            background-color: white;
+            color: var(--crimson);
+            box-shadow: 0 0 20px var(--crimson), 0 0 40px rgba(220, 20, 60, 0.5);
+        }
+
+        /* SECTION: Scroll Progress */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 100px;
+            z-index: 1000;
+        }
+
+        .scroll-progress {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .scroll-sword {
+            font-size: 40px;
+            animation: rotateSword 2s linear infinite;
+            filter: drop-shadow(0 0 10px var(--crimson)) drop-shadow(0 0 20px var(--crimson));
+        }
+
+        .progress-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border: 3px solid rgba(220, 20, 60, 0.2);
+            border-top: 3px solid var(--crimson);
+            border-radius: 50%;
+            animation: progressRing 1.5s ease-in-out infinite;
+        }
+
+        @keyframes rotateSword {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes progressRing {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .scroll-indicator.complete .scroll-sword {
+            animation: completeFlash 0.5s ease-in-out forwards;
+        }
+
+        .scroll-indicator.complete .progress-ring {
+            border-color: var(--crimson);
+            animation: completeRing 0.5s ease-in-out forwards;
+        }
+
+        @keyframes completeFlash {
+            0% { transform: scale(1); filter: drop-shadow(0 0 10px var(--crimson)); }
+            50% { transform: scale(1.5); filter: drop-shadow(0 0 30px var(--crimson)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 20px var(--crimson)); }
+        }
+
+        @keyframes completeRing {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* SECTION: Hero */
+        .hacker-text {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 24px;
+            color: #ff0000;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            z-index: 10;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #particle-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .hero-content {
+            text-align: center;
+            padding: 20px;
+            position: absolute;
+            bottom: 10vh;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 800px;
+            opacity: 1;
+        }
+
+        .hero h1 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-shadow: var(--text-glow);
+            font-weight: 900;
+            opacity: 0;
+        }
+
+        .typing-text {
+            opacity: 0;
+        }
+
+        .typing-text span {
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: typeIn 0.1s forwards;
+        }
+
+        @keyframes typeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* SECTION: The Way of Life */
+        .way-of-life {
+            padding: 100px 20px;
+            background-color: var(--dark-gray);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            position: relative;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .glitch {
+            position: relative;
+        }
+
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-gray);
+        }
+
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 red;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 blue;
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(31px, 9999px, 94px, 0); }
+            10% { clip: rect(112px, 9999px, 76px, 0); }
+            20% { clip: rect(85px, 9999px, 77px, 0); }
+            30% { clip: rect(27px, 9999px, 97px, 0); }
+            40% { clip: rect(64px, 9999px, 98px, 0); }
+            50% { clip: rect(61px, 9999px, 85px, 0); }
+            60% { clip: rect(99px, 9999px, 114px, 0); }
+            70% { clip: rect(34px, 9999px, 115px, 0); }
+            80% { clip: rect(98px, 9999px, 129px, 0); }
+            90% { clip: rect(43px, 9999px, 96px, 0); }
+            100% { clip: rect(82px, 9999px, 64px, 0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 119px, 0); }
+            10% { clip: rect(66px, 9999px, 151px, 0); }
+            20% { clip: rect(33px, 9999px, 149px, 0); }
+            30% { clip: rect(86px, 9999px, 132px, 0); }
+            40% { clip: rect(75px, 9999px, 145px, 0); }
+            50% { clip: rect(105px, 9999px, 69px, 0); }
+            60% { clip: rect(95px, 9999px, 84px, 0); }
+            70% { clip: rect(103px, 9999px, 86px, 0); }
+            80% { clip: rect(85px, 9999px, 109px, 0); }
+            90% { clip: rect(121px, 9999px, 127px, 0); }
+            100% { clip: rect(88px, 9999px, 103px, 0); }
+        }
+
+        .carousel-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            height: 500px;
+            position: relative;
+        }
+
+        .carousel {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+
+        .carousel-item {
+            position: absolute;
+            width: 300px;
+            height: 400px;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, var(--medium-gray), var(--black));
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.5s ease;
+            cursor: pointer;
+            border: 1px solid var(--crimson);
+            overflow: hidden;
+        }
+
+        .carousel-item {
+            transform-style: preserve-3d;
+            transition: all 0.5s ease;
+            opacity: 0.85;
+            box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateZ(200px) rotateY(0deg) !important;
+            box-shadow: 0 0 40px var(--crimson);
+            background: var(--medium-gray);
+        }
+
+        .carousel-item:hover {
+            opacity: 0.95;
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--crimson);
+        }
+
+        .carousel-item.clicked {
+            opacity: 1 !important;
+            box-shadow: 0 0 50px var(--crimson);
+            background: var(--dark-gray);
+        }
+
+        .carousel-item:hover::before {
+            opacity: 1;
+            filter: blur(5px);
+        }
+
+        @keyframes animate {
+            0% { background-position: 0 0; }
+            50% { background-position: 300% 0; }
+            100% { background-position: 0 0; }
+        }
+
+        .carousel-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--crimson);
+            text-shadow: var(--text-glow);
+        }
+
+        .carousel-item p {
+            text-align: center;
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .carousel-item.active {
+            transform: translate(-50%, -50%) translateZ(200px) !important;
+            z-index: 10;
+            box-shadow: 0 0 30px var(--crimson);
+        }
+
+        /* SECTION: Services */
+        .services {
+            padding: 100px 20px;
+            background-color: var(--black);
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 80px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .service-text {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .service-image {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .service-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .service-image img:hover {
+            transform: scale(1.05);
+            box-shadow: var(--glow);
+        }
+
+        .service-item:nth-child(even) .service-text {
+            order: 2;
+        }
+
+        .service-item:nth-child(even) .service-image {
+            order: 1;
+        }
+
+        .service-item h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--crimson);
+            text-shadow: var(--text-glow);
+        }
+
+        .service-item p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        /* SECTION: Revolution Footer */
+        .revolution {
+            padding: 150px 20px 100px;
+            background-color: var(--dark-gray);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .thunder-container {
+            position: relative;
+            width: 300px;
+            height: 200px;
+            margin: 0 auto 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,0.6));
+            border-radius: 10px;
+        }
+
+        .thunder {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .thunder-line {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8),
+                       0 0 20px rgba(255, 255, 255, 0.6),
+                       0 0 30px rgba(255, 255, 255, 0.4);
+            animation: carve-thunder 1s forwards;
+            opacity: 0;
+            filter: url(#displacement);
+        }
+
+        @keyframes carve-thunder {
+            0% { opacity: 0; transform: scale(0) translateY(-20px); filter: brightness(2); }
+            50% { opacity: 1; transform: scale(1.2) translateY(0); filter: brightness(1.5); }
+            100% { opacity: 1; transform: scale(1) translateY(0); filter: brightness(1); }
+        }
+
+        .law-text {
+            position: absolute;
+            left: 50%;
+            top: 35%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: var(--text-glow);
+            opacity: 0;
+            letter-spacing: 3px;
+        }
+
+        .glitch-text {
+            position: absolute;
+            left: 50%;
+            top: 65%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: var(--text-glow);
+            opacity: 0;
+            letter-spacing: 2px;
+        }
+
+        .revolution-text {
+            font-size: 2.5rem;
+            margin: 30px 0;
+            text-shadow: var(--text-glow);
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .revolution-text.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes flicker {
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+                opacity: 1;
+                text-shadow: var(--text-glow);
+            }
+            20%, 22%, 24%, 55% {
+                opacity: 0.5;
+                text-shadow: none;
+            }
+        }
+
+        .footer-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .footer-btn {
+            background-color: transparent;
+            color: white;
+            border: 2px solid var(--crimson);
+            padding: 10px 30px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-radius: 3px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .footer-btn:hover {
+            background-color: var(--crimson);
+            box-shadow: var(--glow);
+        }
+
+        /* SECTION: About & Policies */
+        .about-section, .policies-section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .about-content {
+            margin-bottom: 50px;
+        }
+
+        .about-content p {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 40px;
+        }
+
+        .grid-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .grid-item:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--glow);
+        }
+
+        .grid-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            text-align: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .policy-item {
+            margin-bottom: 40px;
+            background-color: var(--medium-gray);
+            padding: 20px;
+            border-radius: 5px;
+            border-left: 3px solid var(--crimson);
+        }
+
+        .policy-item h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--crimson);
+        }
+
+        .policy-item p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        /* SECTION: Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .service-item {
+                flex-direction: column;
+            }
+
+            .service-item:nth-child(even) .service-text,
+            .service-item:nth-child(even) .service-image {
+                order: initial;
+            }
+
+            .carousel-container {
+                height: 400px;
+            }
+
+            .carousel-item {
+                width: 250px;
+                height: 350px;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .law-text, .glitch-text {
+                position: static;
+                transform: none;
+                margin: 10px 0;
+            }
+
+            .flower-container {
+                margin-bottom: 100px;
+            }
+
+            .footer-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .carousel-container {
+                height: 300px;
+            }
+
+            .carousel-item {
+                width: 200px;
+                height: 280px;
+                padding: 15px;
+            }
+
+            .carousel-item h3 {
+                font-size: 1.2rem;
+            }
+
+            .carousel-item p {
+                font-size: 0.9rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .revolution-text {
+                font-size: 1.8rem;
+            }
+        }
+/* Service Image Container */
+.service-image {
+  min-height: 400px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .service-image {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 480px) {
+  .service-image {
+    min-height: 250px;
+  }
+}
+    </style>
+</head>
+<body>
+    <!-- SECTION: Custom Cursor -->
+    <div class="cursor">🗡</div>
+    <div class="cursor-tail"></div>
+
+    <!-- SECTION: Navigation -->
+    <header>
+        <div class="logo">LAWGLITCH</div>
+        <div class="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <nav class="nav-menu">
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#about">About Us</a>
+            <a href="#policies">Policies</a>
+        </nav>
+        <button class="get-started-btn" id="getStartedLink">GET STARTED</button>
+    </header>
+
+    <!-- SECTION: Scroll Progress -->
+    <div class="scroll-indicator">
+        <div class="scroll-progress">
+            <div class="progress-ring"></div>
+            <div class="scroll-sword">⚔</div>
+        </div>
+    </div>
+
+    <!-- SECTION: Hero -->
+    <section class="hero" id="home">
+        <div class="hacker-text"></div>
+        <div id="particle-canvas"></div>
+        <div class="hero-content">
+            <h1>Welcome soldier, ready to live your life without fear?</h1>
+        </div>
+    </section>
+
+    <!-- SECTION: The Way of Life -->
+    <section class="way-of-life" id="way">
+        <h2 class="section-title glitch" data-text="The Way of Life We Promote">The Way of Life We Promote</h2>
+        <div class="carousel-container">
+            <div class="carousel">
+                <div class="carousel-item">
+                    <h3>1. Record Everything</h3>
+                    <p>Conversations, transactions, all of it. Documentation is your sword.</p>
+                </div>
+                <div class="carousel-item">
+                    <h3>2. Know Every Law</h3>
+                    <p>Ignorance is surrender. Legal mastery is your weapon.</p>
+                </div>
+                <div class="carousel-item">
+                    <h3>3. Document Everything</h3>
+                    <p>Evidence is the only truth in a corrupt world.</p>
+                </div>
+                <div class="carousel-item">
+                    <h3>4. Pay Minimum Legal Tax</h3>
+                    <p>Keep your money. They'll only use it against you.</p>
+                </div>
+                <div class="carousel-item">
+                    <h3>5. Build the Right Network</h3>
+                    <p>Powerful allies are your armor. Don't walk alone.</p>
+                </div>
+                <div class="carousel-item">
+                    <h3>6. Fear No One</h3>
+                    <p>If you've done no wrong, never bow. Stand until the end.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: Services -->
+    <section class="services" id="services">
+        <h2 class="section-title glitch" data-text="Our Services & Products">Our Services & Products</h2>
+
+        <div class="service-item">
+            <div class="service-text">
+                <h3>Hire Professionals</h3>
+                <p>Instantly connect with elite lawyers, accountants, advisors, and secretaries. Fill out a quick form, hit WhatsApp, and get help in minutes.</p>
+            </div>
+            <div class="service-image">
+                <img src="PLACEHOLDER.png" alt="hire%20professionals">
+            </div>
+        </div>
+
+        <div class="service-item">
+            <div class="service-text">
+                <h3>Freedom Arsenal</h3>
+                <p>Equip yourself with the tools for fearless living—secure devices, privacy tactics, encrypted storage, and underground resources.</p>
+            </div>
+            <div class="service-image">
+                <img src="PLACEHOLDER.png" alt="store">
+            </div>
+        </div>
+
+        <div class="service-item">
+            <div class="service-text">
+                <h3>Evidence Tracker</h3>
+                <p>Store and timestamp your most valuable data—chats, calls, videos, and voice memos. Perfect for defending yourself in legal ambushes.</p>
+            </div>
+            <div class="service-image">
+                <img src="PLACEHOLDER.png" alt="evidence%20tracker">
+            </div>
+        </div>
+
+        <div class="service-item">
+            <div class="service-text">
+                <h3>My Accountant Glitch</h3>
+                <p>Bored of spreadsheets? Try our gamified digital command center:</p>
+                <p>My Accountant Glitch → Track money like a pro.</p>
+                <p>replace your old unreliable daily transaction books with the new Gamified solution.</p>
+				<p> Just hit all your transactions. income recieved,expense paid, losses ALL OF IT, and save them</p>
+				<p>With a single 'click' export the yearly data as .json and give them to the reporter for making financial statements, you need to submit</p>
+            </div>
+            <div class="service-image">
+                <img src="PLACEHOLDER.png" alt="My%20Accountant%20Glitch">
+            </div>
+        </div>
+		  <div class="service-item">
+            <div class="service-text">
+                <h3>Business Glitch</h3>
+                <p>This isn't software — it's a war map for business dominance. From clients to employees to inventory, it's all gamified.</p>
+            </div>
+            <div class="service-image">
+                <img src="PLACEHOLDER.png" alt="Business.Glitch">
+            </div>
+        </div>
+		  <div class="service-item">
+            <div class="service-text">
+                <h3>Freedom Glitch</h3>
+                <p>Your money deserves freedom too. Glitch the system: smartly invest, diversify like the 1%, and plan for the future — all while dodging inflation and tax traps..</p>
+            </div>
+            <div class="service-image">
+                <img src="PLACEHOLDER.png" alt="Freedom%20Glitch">
+            </div>
+        </div>
+		  
+        </div>
+    </section>
+
+    <!-- SECTION: Revolution Footer -->
+    <section class="revolution" id="revolution">
+        <div class="thunder-container">
+            <div class="thunder">
+                <!-- Thunder lines will be added via JS -->
+            </div>
+            <div class="law-text">LAW</div>
+            <div class="glitch-text">GLITCH</div>
+        </div>
+        <div class="revolution-text fade-in">THE REVOLUTION BEGINS</div>
+        <div class="footer-buttons">
+            <button class="footer-btn" onclick="document.getElementById('about').scrollIntoView({behavior: 'smooth'})">About Us</button>
+            <button class="footer-btn" onclick="document.getElementById('policies').scrollIntoView({behavior: 'smooth'})">Policies</button>
+        </div>
+    </section>
+
+    <!-- SECTION: About Us -->
+    <section class="about-section" id="about">
+        <h2 class="section-title">About Us</h2>
+        <div class="about-content">
+            <p>LawGlitch was built by rebels, not businessmen. We don’t obey corrupt systems — we glitch them.</p>
+<p>We are the shield for the innocent, the voice for the silenced, and the weapon against a broken, rigged judiciary and oppressive taxation.</p>
+
+<p>This isn’t just a platform — it’s a full-scale rebellion against injustice, legal loopholes, and taxation slavery designed to crush the common man.</p>
+
+<p>Need a pro in minutes? Fill a simple form, hit WhatsApp, and get connected instantly to experts who fight for your rights — no bureaucratic delays, no runaround.
+
+Got evidence? Store your PDFs, photos, videos, audio, and notes safely with tamper-proof protection — so your truth stays unbreakable.
+
+Running a business? Use our free, powerful tools to track daily transactions, manage clients and employees, and stay on top of all filings — because knowledge is power.
+
+Want to stay safe? Our store offers everything from self-defense gear to hidden cams — weapons for your personal security in a world that often turns a blind eye.</p>
+
+<p>LawGlitch is for the fearless — the fighters who refuse to pay blind taxes, the warriors tired of corrupt judges, and the visionaries ready to own their freedom.</p>
+
+<p>We’re here to glitch the system, expose the lies, and build a future where you are untouchable.</p>
+
+<p>Join the rebellion. Outsmart the system. Own your law. Own your life.</p>
+
+<p>LawGlitch — Your law. Your fight. Your glitch for this Broken system.</p>
+        </div>
+        <div class="image-grid">
+            <div class="grid-item">
+                <img src="https://i.imgur.com/OVrxup4.jpg" alt="Legal Injustice">
+                <div class="image-caption">Judicial Genocide</div>
+            </div>
+            <div class="grid-item">
+                <img src="https://i.imgur.com/FssP4ek.jpg" alt="Tax Protest">
+                <div class="image-caption">Tax Terrorism</div>
+            </div>
+            <div class="grid-item">
+                <img src="https://i.imgur.com/PAjfXgk.jpg" alt="Resistance">
+                <div class="image-caption">The Resistance</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: Policies -->
+   <section class="policy-section">
+
+  <div class="policy-item">
+    <h3>Privacy Policy</h3>
+    <p>We don’t track you. We don’t store your data. In fact, we don’t even have a login system — because privacy isn’t just a feature here, it’s a *right.*  
+    Your info never leaves your device. No sneaky servers, no hidden agendas. We’re here to fight the system, not become part of it.  
+    Got questions? Hit us up: <a href="mailto:lawglitch@gmail.com">lawglitch@gmail.com</a></p>
+  </div>
+
+  <div class="policy-item">
+    <h3>Pricing</h3>
+    <p>Our tools? nearly 100% free — because knowledge and power should never come with a price tag.  
+    We only charge when you whwn it's obviously a fair trade.  
+    Cheaper than that junk burger you regret later, and far more valuable for your future.  
+    We fiercely protect our work from copycats looking to profit, but freedom fighters? We’ve got your back.  
+    Transparency is everything — audit our content and pricing anytime. No secrets here.</p>
+  </div>
+
+  <div class="policy-item">
+    <h3>Copyright</h3>
+    <p>© LawGlitch, 2025. All rights reserved. Copy us for profit? Not on our watch.  
+    Modification or redistribution without permission is a big no-no.  
+    This is our rebellion — and it stays ours.</p>
+  </div>
+
+</section>
+
+    <script>
+        // SECTION: Three.js Particle Sphere
+        function typeText(element, text) {
+            element.innerHTML = '';
+            element.classList.add('typing-text');
+            text.split('').forEach((char, i) => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.style.animationDelay = `${i * 0.05}s`;
+                element.appendChild(span);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Hacker text animation
+            const messages = [
+                "Hello, soldier. You've been lied to by your own government.",
+                "The tax system is daylight robbery — and you're the victim.",
+                "Family courts give women everything — alimony, custody, and zero accountability.",
+                "Police, politicians, and bureaucrats are nothing but legalized thugs.",
+                "India was born from rebellion — We Can't afford to be silent being spineless. Tommorow it will be You.",
+                "we know it takes a lot to raise your voice. thats why we did it for you, step-by-step... Join us now & begin your journey."
+            ];
+
+            const hackerText = document.querySelector('.hacker-text');
+            let currentMessageIndex = 0;
+
+            async function typeHackerMessage(text) {
+                hackerText.style.opacity = '1';
+                hackerText.textContent = '';
+                for(let char of text) {
+                    hackerText.textContent += char;
+                    await new Promise(resolve => setTimeout(resolve, 50));
+                }
+                await new Promise(resolve => setTimeout(resolve, 2000));
+                hackerText.style.opacity = '0';
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+
+            async function cycleMessages() {
+                while(true) {
+                    await typeHackerMessage(messages[currentMessageIndex]);
+                    currentMessageIndex = (currentMessageIndex + 1) % messages.length;
+                }
+            }
+
+            cycleMessages();
+
+            // Start text animation
+            const heroText = document.querySelector('.hero h1');
+            setTimeout(() => {
+                typeText(heroText, heroText.textContent);
+            }, 1000);
+            // Three.js setup
+            const canvas = document.getElementById('particle-canvas');
+            const scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x000000, 0.01);
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ 
+                antialias: true,
+                alpha: true,
+                powerPreference: "high-performance"
+            });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x000000, 0);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            canvas.appendChild(renderer.domElement);
+
+            camera.position.z = 15;
+            camera.position.y = 5;
+
+            // Create particle sphere
+            const particleCount = 15000;
+            const particles = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+            const sizes = new Float32Array(particleCount);
+            
+            for(let i = 0; i < particleCount; i++) {
+                const phi = Math.acos(-1 + (2 * i) / particleCount);
+                const theta = Math.sqrt(particleCount * Math.PI) * phi;
+                
+                positions[i * 3] = 5 * Math.sin(phi) * Math.cos(theta);
+                positions[i * 3 + 1] = 5 * Math.sin(phi) * Math.sin(theta);
+                positions[i * 3 + 2] = 5 * Math.cos(phi);
+                
+                colors[i * 3] = 0.8 + Math.random() * 0.2;
+                colors[i * 3 + 1] = 0.1 + Math.random() * 0.1;
+                colors[i * 3 + 2] = 0.1 + Math.random() * 0.1;
+                
+                sizes[i] = 0.1 + Math.random() * 0.1;
+            }
+            
+            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            
+            const particleMaterial = new THREE.PointsMaterial({
+                size: 0.15,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const particleSystem = new THREE.Points(particles, particleMaterial);
+            scene.add(particleSystem);
+            
+            // Create orbit rings
+            const ringGeometry = new THREE.BufferGeometry();
+            const ringParticles = 3000;
+            const ringPositions = new Float32Array(ringParticles * 3);
+            const ringColors = new Float32Array(ringParticles * 3);
+            const ringSizes = new Float32Array(ringParticles);
+            
+            for(let i = 0; i < ringParticles; i++) {
+                const angle = (i / ringParticles) * Math.PI * 2;
+                const radius = 6 + (Math.random() - 0.5) * 0.4;
+                
+                ringPositions[i * 3] = Math.cos(angle) * radius;
+                ringPositions[i * 3 + 1] = (Math.random() - 0.5) * 0.4;
+                ringPositions[i * 3 + 2] = Math.sin(angle) * radius;
+                
+                ringColors[i * 3] = 1.0;
+                ringColors[i * 3 + 1] = 0.2 + Math.random() * 0.1;
+                ringColors[i * 3 + 2] = 0.2 + Math.random() * 0.1;
+                
+                ringSizes[i] = 0.1 + Math.random() * 0.1;
+            }
+            
+            ringGeometry.setAttribute('position', new THREE.BufferAttribute(ringPositions, 3));
+            ringGeometry.setAttribute('color', new THREE.BufferAttribute(ringColors, 3));
+            ringGeometry.setAttribute('size', new THREE.BufferAttribute(ringSizes, 1));
+            
+            const ringMaterial = new THREE.PointsMaterial({
+                size: 0.12,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0.7,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const rings = [];
+            for(let i = 0; i < 6; i++) {
+                const ring = new THREE.Points(ringGeometry, ringMaterial);
+                ring.rotation.x = Math.random() * Math.PI;
+                ring.rotation.y = Math.random() * Math.PI;
+                scene.add(ring);
+                rings.push(ring);
+            }
+            
+            // Animation loop
+            let time = 0;
+            function animate() {
+                requestAnimationFrame(animate);
+                time += 0.002;
+                
+                // Rotate particles
+                particleSystem.rotation.y += 0.001;
+                particleSystem.rotation.x = Math.sin(time * 0.5) * 0.15;
+                
+                // Pulse effect
+                const breathe = 1 + Math.sin(time * 1.5) * 0.1;
+                particleSystem.scale.set(breathe, breathe, breathe);
+                
+                // Rotate rings
+                rings.forEach((ring, i) => {
+                    const dynamicSpeed = 0.001 * (Math.sin(time * 0.2) + 2.0) * (i + 1);
+                    ring.rotation.z += dynamicSpeed;
+                    ring.rotation.x += dynamicSpeed * 0.6;
+                    ring.rotation.y += dynamicSpeed * 0.4;
+                });
+                
+                renderer.render(scene, camera);
+            }
+            
+            animate();
+            
+            // Handle resize
+            window.addEventListener('resize', function() {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            
+            // Mouse movement effect
+            document.addEventListener('mousemove', function(e) {
+                const mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                const mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+                
+                particleSystem.rotation.x += (mouseY * 0.2 - particleSystem.rotation.x) * 0.05;
+                particleSystem.rotation.y += (mouseX * 0.2 - particleSystem.rotation.y) * 0.05;
+                
+                const distanceX = (mouseX * 1.5);
+                const distanceY = (mouseY * 1.5);
+                particleSystem.position.x += (distanceX - particleSystem.position.x) * 0.05;
+                particleSystem.position.y += (distanceY - particleSystem.position.y) * 0.05;
+            });
+
+            // SECTION: Custom Cursor
+            const cursor = document.querySelector('.cursor');
+            const cursorTail = document.querySelector('.cursor-tail');
+            let mouseX = 0, mouseY = 0;
+            let tailX = 0, tailY = 0;
+            let scale = 1;
+            let trail = [];
+            const maxTrail = 20;
+
+            document.addEventListener('mousemove', function(e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                cursor.style.transform = `translate(${mouseX - 16}px, ${mouseY - 16}px) rotate(-45deg) scale(${scale})`;
+
+                trail.push({ x: mouseX, y: mouseY });
+                if (trail.length > maxTrail) trail.shift();
+            });
+
+            function updateCursorTail() {
+                if (trail.length > 2) {
+                    const lastPoint = trail[trail.length - 1];
+                    tailX += (lastPoint.x - tailX) * 0.2;
+                    tailY += (lastPoint.y - tailY) * 0.2;
+
+                    cursorTail.style.transform = `translate(${tailX}px, ${tailY}px)`;
+                    cursorTail.style.width = `${scale * 30}px`;
+                    cursorTail.style.height = `${scale * 30}px`;
+                    cursorTail.style.opacity = '0.7';
+                    cursorTail.style.background = `radial-gradient(circle, rgba(0,255,255,0.8) 0%, rgba(255,20,147,0) 70%)`;
+                }
+                requestAnimationFrame(updateCursorTail);
+            }
+
+            updateCursorTail();
+
+            // Change cursor on hover
+            const hoverElements = document.querySelectorAll('a, button, .carousel-item');
+            hoverElements.forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.textContent = '🔍';
+                    cursor.style.transform = 'translate(-50%, -50%) rotate(0deg)';
+                    scale = 1.2;
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.textContent = '🗡';
+                    cursor.style.transform = 'translate(-50%, -50%) rotate(45deg)';
+                    scale = 1;
+                });
+                el.addEventListener('click', () => {
+                    cursor.textContent = '🗡';
+                    setTimeout(() => {
+                        cursor.textContent = '🔍';
+                    }, 300);
+                });
+            });
+
+            // SECTION: Hamburger Menu
+            const hamburger = document.querySelector('.hamburger');
+            const navMenu = document.querySelector('.nav-menu');
+
+            hamburger.addEventListener('click', () => {
+                hamburger.classList.toggle('active');
+                navMenu.classList.toggle('active');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
+                    hamburger.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            });
+
+            // SECTION: Scroll Indicator
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            const scrollProgress = document.querySelector('.scroll-progress');
+
+            window.addEventListener('scroll', () => {
+                const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+                const scrolled = (window.scrollY / scrollHeight) * 100;
+                scrollProgress.style.width = `${scrolled}%`;
+
+                if (scrolled >= 99.9) {
+                    scrollIndicator.classList.add('complete');
+                } else {
+                    scrollIndicator.classList.remove('complete');
+                }
+            });
+
+            // SECTION: 3D Carousel
+            const carousel = document.querySelector('.carousel');
+            const items = document.querySelectorAll('.carousel-item');
+            const itemCount = items.length;
+            let angle = 0;
+            let activeIndex = 0;
+            let isPaused = false;
+
+            // Position items in a circle
+            function positionItems() {
+                const radius = Math.min(window.innerWidth, 1000) / 2.5;
+
+                items.forEach((item, i) => {
+                    const itemAngle = angle + (i * (2 * Math.PI / itemCount));
+                    const x = Math.sin(itemAngle) * radius;
+                    const z = Math.cos(itemAngle) * radius;
+
+                    item.style.transform = `translate(-50%, -50%) translateX(${x}px) translateZ(${z}px) rotateY(${-itemAngle}rad)`;
+                    item.style.opacity = 1 - Math.abs(z) / radius * 0.8;
+                });
+            }
+
+            // Auto-rotate carousel
+            function rotateCarousel() {
+                if (!isPaused) {
+                    angle += 0.002;
+                    positionItems();
+                }
+                requestAnimationFrame(rotateCarousel);
+            }
+
+            // Handle item click
+            items.forEach((item, i) => {
+                item.addEventListener('click', () => {
+                    isPaused = true;
+                    activeIndex = i;
+                    item.classList.add('clicked');
+
+                    // Highlight clicked item
+                    items.forEach(it => it.classList.remove('active'));
+                    item.classList.add('active');
+
+                    // Center the clicked item after a delay
+                    setTimeout(() => {
+                        const targetAngle = -i * (2 * Math.PI / itemCount);
+                        angle = targetAngle;
+                        positionItems();
+                    }, 100);
+
+                    // Resume after 5 seconds
+                    setTimeout(() => {
+                        isPaused = false;
+                        items.forEach(it => it.classList.remove('active'));
+                    }, 5000);
+                });
+            });
+
+            positionItems();
+            rotateCarousel();
+
+            // SECTION: Thunder Animation
+            const thunder = document.querySelector('.thunder');
+            const lawText = document.querySelector('.law-text');
+            const glitchText = document.querySelector('.glitch-text');
+            const revolutionText = document.querySelector('.revolution-text');
+
+            function createThunderLines() {
+                const lines = [
+                    { width: '4px', height: '100px', left: '45%', top: '10%', transform: 'rotate(30deg)' },
+                    { width: '4px', height: '80px', left: '55%', top: '30%', transform: 'rotate(-45deg)' },
+                    { width: '4px', height: '90px', left: '50%', top: '40%', transform: 'rotate(15deg)' },
+                    { width: '4px', height: '70px', left: '40%', top: '50%', transform: 'rotate(-60deg)' },
+                    { width: '4px', height: '110px', left: '60%', top: '20%', transform: 'rotate(45deg)' }
+                ];
+
+                lines.forEach((line, i) => {
+                    const thunderLine = document.createElement('div');
+                    thunderLine.className = 'thunder-line';
+                    Object.assign(thunderLine.style, line);
+                    thunderLine.style.animationDelay = `${i * 0.15}s`;
+                    thunder.appendChild(thunderLine);
+                });
+            }
+
+            // GSAP Animations for About/Policies fade
+            gsap.registerPlugin(ScrollTrigger);
+            
+        // 1. SERVICES SECTION ANIMATIONS - Makes each service item slide in
+      document.querySelectorAll('.service-item').forEach((item, index) => {
+        const direction = index % 2 === 0 ? 100 : -100; // Alternate directions
+        
+        // Text part animation
+        gsap.from(item.querySelector('.service-text'), {
+            x: -direction,
+            opacity: 0,
+            duration: 1,
+            scrollTrigger: {
+                trigger: item,
+                start: "top 80%",
+                end: "top 20%",
+                toggleActions: "play none none none",
+                scrub: 1
+            }
+        });
+
+        // Image part animation
+        gsap.from(item.querySelector('.service-image'), {
+            x: direction,
+            opacity: 0,
+            duration: 1,
+            scrollTrigger: {
+                trigger: item,
+                start: "top 80%",
+                end: "top 20%",
+                toggleActions: "play none none none",
+                scrub: 1
+            }
+        });
+    });
+
+  
+    // 3D Parallax Effect for About Section
+    gsap.to(".about-content", {
+        scrollTrigger: {
+            trigger: ".about-section",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
+        },
+        y: -50,
+        z: 50,
+        rotationX: -5,
+        ease: "none"
+    });
+
+    // Individual image cards parallax
+    document.querySelectorAll('.grid-item').forEach((item, index) => {
+        gsap.from(item, {
+            scrollTrigger: {
+                trigger: ".about-section",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1
+            },
+            y: 100 + (index * 20),
+            z: -100 + (index * 40),
+            rotationX: 10,
+            opacity: 0
+        });
+    });
+
+    // 3D Parallax Effect for Policies Section
+    gsap.to(".policy-content", {
+        scrollTrigger: {
+            trigger: ".policies-section",
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1
+        },
+        y: -50,
+        z: 50,
+        rotationX: 5,
+        ease: "none"
+    });
+
+    // Policy items staggered effect
+    document.querySelectorAll('.policy-item').forEach((item, index) => {
+        gsap.from(item, {
+            scrollTrigger: {
+                trigger: ".policies-section",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 1
+            },
+            y: 100 + (index * 30),
+            z: -150 + (index * 60),
+            rotationY: index % 2 ? -10 : 10,
+            opacity: 0
+        });
+    });
+
+            // Scroll-based animations with GSAP
+            gsap.to(".thunder-container", {
+                scrollTrigger: {
+                    trigger: ".revolution",
+                    start: "top center",
+                    end: "bottom center",
+                    toggleActions: "play reverse play reverse",
+                    onEnter: () => {
+                        createThunderLines();
+                        gsap.to(lawText, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1,
+                            ease: "power2.out"
+                        });
+                        gsap.to(glitchText, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1,
+                            delay: 0.3,
+                            ease: "power2.out"
+                        });
+                        gsap.to(revolutionText, {
+                            opacity: 1,
+                            y: 0,
+                            duration: 1,
+                            delay: 0.6,
+                            ease: "power2.out"
+                        });
+                    },
+                    onLeave: () => {
+                        gsap.to([lawText, glitchText, revolutionText, ".thunder-line"], {
+                            opacity: 0,
+                            y: 20,
+                            duration: 0.5,
+                            ease: "power2.in"
+                        });
+                    },
+                    onEnterBack: () => {
+                        gsap.to([lawText, glitchText, revolutionText, ".thunder-line"], {
+                            opacity: 1,
+                            y: 0,
+                            duration: 0.5,
+                            ease: "power2.out"
+                        });
+                    },
+                    onLeaveBack: () => {
+                        gsap.to([lawText, glitchText, revolutionText, ".thunder-line"], {
+                            opacity: 0,
+                            y: -20,
+                            duration: 0.5,
+                            ease: "power2.in"
+                        });
+                    }
+                }
+            });
+
+            // GET STARTED LINK
+            document.getElementById('getStartedLink').addEventListener('click', () => {
+                window.location.href = 'login page.html';
+            });
+        });
+		// Replace service images with iframes
+document.addEventListener('DOMContentLoaded', () => {
+  const serviceImages = document.querySelectorAll('.service-image');
+  
+  serviceImages.forEach(container => {
+    const img = container.querySelector('img');
+    if (!img || !img.alt) return;
+    
+    const filename = img.alt
+      .toLowerCase()
+      .replace(/\s+/g,)
+      .concat('.html');
+      
+    const iframe = document.createElement('iframe');
+    Object.assign(iframe, {
+      src: filename,
+      width: '100%',
+      height: '400',
+      loading: 'lazy'
+    });
+    
+    iframe.style.cssText = 'border: none; border-radius: 5px; min-height: 400px;'; // Added min-height
+    container.innerHTML = '';
+    container.appendChild(iframe);
+  });
+});
+    </script>
+</body>
+</html>

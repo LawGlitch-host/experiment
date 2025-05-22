@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LawGlitch Armoury</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #000;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(255, 0, 0, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255, 0, 0, 0.7);
+            animation: fall linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-10px) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        .main-content {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 8px 15px;
+            background-color: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0033;
+            border-radius: 4px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .content-title {
+            font-size: 2rem;
+            margin-bottom: 30px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #ff0033;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .tool-card {
+            background-color: rgba(0, 0, 0, 0.7);
+            border: 1px solid #ff0033;
+            border-radius: 8px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .tool-card:nth-child(2) {
+            animation-delay: 1s;
+        }
+
+        .tool-card:nth-child(3) {
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .tool-image {
+            width: 100%;
+            height: 160px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .tool-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .tool-card:hover .tool-image img {
+            transform: scale(1.05);
+        }
+
+        .tool-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: white;
+            text-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+        }
+
+        .tool-description {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.5;
+            max-height: 60px;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .tool-card:hover .tool-description {
+            max-height: 200px;
+        }
+
+        .tool-btn {
+            display: inline-block;
+            padding: 8px 20px;
+            background-color: rgba(255, 0, 0, 0.2);
+            border: 1px solid #ff0033;
+            border-radius: 4px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .tool-btn:hover {
+            background-color: rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+
+        .tool-link {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .tool-link-input {
+            width: 100%;
+            padding: 8px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 4px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .content-title {
+                font-size: 1.5rem;
+            }
+            
+            .tools-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        @media (max-width: 480px) {
+            .content-title {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="main-content" id="mainContent">
+        <button class="back-btn" id="backBtn">Logout</button>
+        <h1 class="content-title">Armoury⚙🛠</h1>
+        <div class="tools-grid" id="toolsGrid">
+            <!-- Tool cards will be added here dynamically -->
+        </div>
+    </div>
+
+    <script>
+        // Create falling particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 3 + 1;
+                const posX = Math.random() * 100;
+                const delay = Math.random() * 10;
+                const duration = Math.random() * 10 + 5;
+                
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            
+            // DOM elements
+            const backBtn = document.getElementById('backBtn');
+            const toolsGrid = document.getElementById('toolsGrid');
+            
+            // Back button (logout) - redirect to home page
+            backBtn.addEventListener('click', function() {
+                window.location.href = "login%20page.html";
+            });
+            
+            // Sample tools data with universal links
+            const toolsData = [
+                {
+                    id: 1,
+                    title: "My Accountant Glitch",
+                    description: "Fire your old accountant. This easy to use Tool tracks every rupee, shows real profit, and keeps your business pulse alive — no suits required.",
+                    image: "https://via.placeholder.com/300x160/ff0033/ffffff?text=Accountant",
+                    link: "My Accountant Glitch.html",
+                    type: "local"
+                },
+                {
+                    id: 2,
+                    title: "Freedom Glitch",
+                    description: "Your money deserves freedom too. Glitch the system: smartly invest, diversify like the 1%, and plan for the future — all while dodging inflation and tax traps.",
+                    image: "https://via.placeholder.com/300x160/ff0033/ffffff?text=Freedom",
+                    link: "Freedom Glitch.html",
+                    type: "local"
+                },
+                {
+                    id: 3,
+                    title: "Business Glitch",
+                    description: "This isn't software — it's a war map for business dominance. From clients to employees to inventory, it's all gamified, automated, and powered by legal AI so precise it writes contracts while you sleep.",
+                    image: "https://via.placeholder.com/300x160/ff0033/ffffff?text=Business",
+                    link: "Business.Glitch.html",
+                    type: "local"
+                },
+               
+            ];
+            
+            // Load tools into dashboard
+            function loadTools() {
+                toolsGrid.innerHTML = "";
+                
+                toolsData.forEach(tool => {
+                    const toolCard = document.createElement('div');
+                    toolCard.className = 'tool-card';
+                    
+                    // Determine if the link is local or external
+                    const isExternal = tool.type === "external" || 
+                                      tool.link.startsWith('http://') || 
+                                      tool.link.startsWith('https://');
+                    
+                    toolCard.innerHTML = `
+                        <div class="tool-image">
+                            <img src="${tool.image}" alt="${tool.title}">
+                        </div>
+                        <h3 class="tool-title">${tool.title}</h3>
+                        <p class="tool-description">${tool.description}</p>
+                        <button class="tool-btn" data-tool-id="${tool.id}" 
+                                data-tool-link="${tool.link}" 
+                                data-tool-type="${isExternal ? 'external' : 'local'}">
+                            Open
+                        </button>
+                    `;
+                    
+                    toolsGrid.appendChild(toolCard);
+                });
+                
+                // Add event listeners to tool buttons
+                document.querySelectorAll('.tool-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const toolLink = this.getAttribute('data-tool-link');
+                        const toolType = this.getAttribute('data-tool-type');
+                        
+                        if (toolType === 'external' || 
+                            toolLink.startsWith('http://') || 
+                            toolLink.startsWith('https://')) {
+                            // Open external links in a new tab
+                            window.open(toolLink, '_blank');
+                        } else {
+                            // Open local HTML files in the same tab
+                            window.location.href = toolLink;
+                        }
+                    });
+                });
+            }
+            
+            // Load tools immediately
+            loadTools();
+        });
+    </script>
+</body>
+</html>

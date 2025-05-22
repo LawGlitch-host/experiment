@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home LawGlitch</title>
+    <style>
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+            background-color: #000;
+        }
+
+        /* Background Elements */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .background-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            background-size: cover;
+            background-position: center;
+            object-fit: cover;
+            animation: backgroundPan 60s infinite alternate ease-in-out;
+            will-change: transform;
+        }
+
+        .dark-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.9) 100%);
+        }
+
+        .red-mist {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(150, 0, 0, 0.1) 0%, transparent 70%);
+            animation: mistPulse 15s infinite alternate;
+            opacity: 0.7;
+        }
+
+        .fog-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%"><filter id="fogFilter"><feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="5" stitchTiles="stitch"/><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.05 0"/></filter><rect width="100%" height="100%" filter="url(%23fogFilter)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .fog-1 {
+            animation: fogMove 30s linear infinite;
+        }
+
+        .fog-2 {
+            animation: fogMove 45s linear infinite reverse;
+            opacity: 0.2;
+        }
+
+        .spark {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(255, 0, 0, 0.7);
+            top: -10px;
+            left: var(--spark-left);
+            animation: sparkFall 8s linear infinite;
+            animation-delay: var(--spark-delay);
+            opacity: 0;
+        }
+
+        /* Animations */
+        @keyframes backgroundPan {
+            0% {
+                transform: scale(1) translateX(0) translateY(0);
+            }
+            100% {
+                transform: scale(1.05) translateX(-5%) translateY(-5%);
+            }
+        }
+
+        @keyframes mistPulse {
+            0% {
+                opacity: 0.5;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0.8;
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes fogMove {
+            0% {
+                transform: translateX(0) translateY(0);
+            }
+            100% {
+                transform: translateX(-50%) translateY(-20%);
+            }
+        }
+
+        @keyframes sparkFall {
+            0% {
+                transform: translateY(0) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Step-by-Step Form */
+        .login-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .form-step {
+            width: 100%;
+            max-width: 600px;
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 1px solid #ff0033;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            display: none;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        .question-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .question-title {
+            font-size: 1.8rem;
+            color: #ff0033;
+            text-transform: uppercase;
+            letter-spacing: 0.3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+        }
+
+        .question-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            letter-spacing: 0.1rem;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-btn {
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ff0033;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover {
+            background-color: rgba(255, 0, 0, 0.2);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.5);
+        }
+
+        .option-btn.selected {
+            background-color: rgba(255, 0, 0, 0.3);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+            border-color: white;
+            animation: pulse 1.5s infinite;
+        }
+
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .nav-btn {
+            padding: 0.8rem 1.5rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ff0033;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.1rem;
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 0, 0, 0.2);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #ff0033;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        /* Final Submit Screen */
+        .final-screen {
+            text-align: center;
+        }
+
+        .final-title {
+            font-size: 2rem;
+            color: #ff0033;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3rem;
+        }
+
+        .final-input {
+            width: 100%;
+            padding: 1rem;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #ff0033;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .submit-btn {
+            padding: 1rem 2rem;
+            background-color: #ff0033;
+            color: white;
+            border: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .submit-btn:hover {
+            background-color: #000;
+            color: #ff0033;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7);
+        }
+
+        /* Homepage Styles */
+        .homepage {
+            display: none;
+            height: 100vh;
+            width: 100vw;
+            position: relative;
+        }
+
+        /* Profile Icon and Popup */
+        .profile-icon {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 0, 0, 0.5);
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .profile-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.7);
+            background-color: rgba(255, 0, 0, 0.2);
+        }
+
+        .profile-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+
+        .profile-popup {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.9);
+            border: 1px solid #ff0033;
+            padding: 1rem;
+            z-index: 1001;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 150px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .profile-info {
+            color: white;
+            text-align: center;
+            padding: 0.5rem;
+            border-bottom: 1px solid #ff0033;
+            margin-bottom: 0.5rem;
+        }
+
+        .logout-btn {
+            background-color: #ff0033;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #000;
+            color: #ff0033;
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .button-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            max-width: 300px;
+        }
+
+        .glowing-btn {
+            padding: 15px 25px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: 1px solid #ff0033;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            text-align: center;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.3), 
+                        inset 0 0 5px rgba(255, 255, 255, 0.1);
+        }
+
+        .glowing-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 0, 0, 0.4) 0%, transparent 70%);
+            transform: scale(0);
+            transition: transform 0.5s ease;
+            opacity: 0;
+        }
+
+        .glowing-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.7), 
+                        inset 0 0 10px rgba(255, 255, 255, 0.2);
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .glowing-btn:hover::before {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Footer Elements */
+        .footer-left {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .bug-report {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .bug-icon {
+            font-size: 18px;
+            text-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+            transition: all 0.3s ease;
+        }
+
+        .bug-text {
+            opacity: 0.8;
+            transition: all 0.3s ease;
+        }
+
+        .bug-report:hover .bug-icon {
+            transform: scale(1.2);
+            text-shadow: 0 0 15px rgba(255, 0, 0, 1);
+        }
+
+        .bug-report:hover .bug-text {
+            opacity: 1;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .footer-center {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+        }
+
+        .contact-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .contact-text:hover {
+            color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .question-title {
+                font-size: 1.5rem;
+            }
+            
+            .glowing-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .footer-center {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-step {
+                padding: 1.5rem;
+            }
+            
+            .button-stack {
+                gap: 15px;
+            }
+
+            .glowing-btn {
+                padding: 10px 15px;
+                font-size: 12px;
+            }
+
+            .contact-text {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->   
+    <div class="background-container">
+        <div class="background-image"></div>
+        <div class="dark-overlay"></div>
+        <div class="red-mist"></div>
+        <div class="fog-layer fog-1"></div>
+        <div class="fog-layer fog-2"></div>
+        <div class="spark" style="--spark-left: 15%; --spark-delay: 0s;"></div>
+        <div class="spark" style="--spark-left: 30%; --spark-delay: 1s;"></div>
+        <div class="spark" style="--spark-left: 75%; --spark-delay: 2s;"></div>
+        <div class="spark" style="--spark-left: 90%; --spark-delay: 3s;"></div>
+        <div class="spark" style="--spark-left: 20%; --spark-delay: 0s;"></div>
+        <div class="spark" style="--spark-left: 40%; --spark-delay: 1s;"></div>
+        <div class="spark" style="--spark-left: 80%; --spark-delay: 2s;"></div>
+        <div class="spark" style="--spark-left: 35%; --spark-delay: 3s;"></div>
+        <div class="spark" style="--spark-left: 45%; --spark-delay: 0s;"></div>
+        <div class="spark" style="--spark-left: 70%; --spark-delay: 1s;"></div>
+        <div class="spark" style="--spark-left: 75%; --spark-delay: 2s;"></div>
+        <div class="spark" style="--spark-left: 20%; --spark-delay: 3s;"></div>
+    </div>
+
+    <!-- Step-by-Step Form -->
+    <div class="login-container" id="loginContainer">
+        <!-- Step 1: Feeling Lost -->
+<div class="form-step active" id="step1">
+    <div class="progress-bar">
+        <div class="progress-fill" style="width: 25%"></div>
+    </div>
+    <div class="question-header">
+        <h2 class="question-title">ARE YOU TIRED?</h2>
+        <p class="question-subtitle">QUESTION 1 OF 3</p>
+    </div>
+    <p class="question-text">What’s been confusing, unfair, or overwhelming lately?</p>
+
+    <div class="options-container">
+        <div class="option-btn" data-value="Taxes & Government Rules">TAXES & GOVERNMENT RULES</div>
+        <div class="option-btn" data-value="Legal Notices or Harassment">LEGAL NOTICES OR HARASSMENT</div>
+        <div class="option-btn" data-value="Money, Loans or Business Stuff">MONEY, LOANS OR BUSINESS STUFF</div>
+        <div class="option-btn" data-value="Bias or False Accusations">BIAS OR FALSE ACCUSATIONS</div>
+        <div class="option-btn" data-value="Just Want to Understand My Rights">JUST WANT TO UNDERSTAND MY RIGHTS</div>
+    </div>
+
+    <div class="form-navigation">
+        <button class="nav-btn" disabled>BACK</button>
+        <button class="nav-btn" id="next1">NEXT</button>
+    </div>
+</div>
+
+<!-- Step 2: Intent -->
+<div class="form-step" id="step2">
+    <div class="progress-bar">
+        <div class="progress-fill" style="width: 50%"></div>
+    </div>
+    <div class="question-header">
+        <h2 class="question-title">WHAT DO YOU WANT?</h2>
+        <p class="question-subtitle">QUESTION 2 OF 3</p>
+    </div>
+    <p class="question-text">What would make you feel more in control today?</p>
+
+    <div class="options-container">
+        <div class="option-btn" data-value="Talk to a lawyer or accountant">TALK TO A LAWYER OR ACCOUNTANT</div>
+        <div class="option-btn" data-value="Use simple tools to track my life">USE SIMPLE TOOLS TO TRACK MY LIFE</div>
+        <div class="option-btn" data-value="Understand my rights & money">UNDERSTAND MY RIGHTS & MONEY</div>
+        <div class="option-btn" data-value="Protect myself from false cases">PROTECT MYSELF FROM FALSE CASES</div>
+        <div class="option-btn" data-value="All of it. I’m tired of fear.">ALL OF IT. I’M TIRED OF FEAR.</div>
+    </div>
+
+    <div class="form-navigation">
+        <button class="nav-btn" id="back2">BACK</button>
+        <button class="nav-btn" id="next2">NEXT</button>
+    </div>
+</div>
+
+<!-- Step 3: Action -->
+<div class="form-step" id="step3">
+    <div class="progress-bar">
+        <div class="progress-fill" style="width: 75%"></div>
+    </div>
+    <div class="question-header">
+        <h2 class="question-title">READY FOR HELP?</h2>
+        <p class="question-subtitle">FINAL STEP</p>
+    </div>
+    <p class="question-text">Pick what you want to try first:</p>
+
+    <div class="options-container">
+        <div class="option-btn" data-value="Hire Professionals on WhatsApp">HIRE PROFESSIONALS ON WHATSAPP</div>
+        <div class="option-btn" data-value="Try the Evidence Tracker">TRY THE EVIDENCE TRACKER</div>
+        <div class="option-btn" data-value="Start with the Money Dashboard">START WITH THE MONEY DASHBOARD</div>
+        <div class="option-btn" data-value="Visit the Store for Legal Tools">VISIT THE STORE FOR LEGAL TOOLS</div>
+    </div>
+
+    <div class="form-navigation">
+        <button class="nav-btn" id="back3">BACK</button>
+        <button class="nav-btn" id="next3">NEXT</button>
+    </div>
+</div>
+
+        <!-- Step 4: Contact -->
+        <div class="form-step final-screen" id="step4">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 100%"></div>
+            </div>
+            <div class="question-header">
+                <h2 class="question-title">FINAL STEP</h2>
+                <p class="question-subtitle">COMPLETE INITIATION</p>
+            </div>
+            
+            <h3 class="final-title">PROVIDE YOUR CONTACT</h3>
+            <p class="question-text">We don't spam. We awaken.</p>
+            
+            <input type="email" class="final-input" id="userEmail" placeholder="SECURE_EMAIL@PROVIDER.COM" required>
+            
+            <button class="submit-btn" id="submitForm">ENTER THE RESISTANCE</button>
+            
+            <div class="form-navigation">
+                <button class="nav-btn" id="back4">BACK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Homepage -->
+    <div class="homepage" id="homepage">
+        <!-- Profile Icon -->
+        <div class="profile-icon" id="profileIcon">
+            <svg viewBox="0 0 24 24">
+                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+        </div>
+        <div class="profile-popup" id="profilePopup">
+            <div class="profile-info">🕷Anonymous🕷</div>
+            <button class="logout-btn">LOGOUT</button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="button-stack">
+                <a href="hire professionals.html" class="glowing-btn">🎓Hire Professionals⚖</a>
+                <a href="store.html" class="glowing-btn">🛒Freedom Arsenal📚</a>
+                <a href="Evidence tracker.html" class="glowing-btn">⚖Evidence Tracker🔍</a>
+                <a href="armoury.html" class="glowing-btn">🛠Armoury⚙</a>
+            </div>
+        </main>
+
+        <!-- Footer Elements -->
+        <div class="footer-left">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLScTElhDupITktRyTCLX_7IXdWRby91ye3JSLsItPCjPdkn1Bg/viewform?usp=header" class="bug-report">
+                <span class="bug-icon">🐞</span>
+                <span class="bug-text">Report Bugs</span>
+            </a>
+        </div> 
+
+        <div class="footer-center">
+            <div class="contact-text" id="contactEmail">Contact us: lawglitch@gmail.com</div>
+        </div>
+    </div>
+
+    <script>
+        // Form Data Storage
+        const formData = {
+            source: null,
+            standsWithCause: null,
+            priority: null,
+            email: null
+        };
+
+        // Step Navigation
+        let currentStep = 1;
+        
+        // Check localStorage on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('resistanceInitiated') === 'true') {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('homepage').style.display = 'block';
+            } else {
+                document.getElementById('loginContainer').style.display = 'flex';
+                document.getElementById('homepage').style.display = 'none';
+            }
+        });
+
+        // Option Selection
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove selected class from all options in this step
+                this.parentElement.querySelectorAll('.option-btn').forEach(option => {
+                    option.classList.remove('selected');
+                });
+                
+                // Add selected class to clicked option
+                this.classList.add('selected');
+                
+                // Enable next button
+                const nextBtn = document.querySelector(`#next${currentStep}`);
+                if (nextBtn) nextBtn.disabled = false;
+            });
+        });
+
+        // Next Button Handlers
+        document.getElementById('next1').addEventListener('click', () => {
+            formData.source = document.querySelector('#step1 .option-btn.selected')?.dataset.value;
+            if (formData.source) {
+                currentStep = 2;
+                showStep(2);
+            }
+        });
+
+        document.getElementById('next2').addEventListener('click', () => {
+            formData.standsWithCause = document.querySelector('#step2 .option-btn.selected')?.dataset.value;
+            if (formData.standsWithCause) {
+                currentStep = 3;
+                showStep(3);
+            }
+        });
+
+        document.getElementById('next3').addEventListener('click', () => {
+            formData.priority = document.querySelector('#step3 .option-btn.selected')?.dataset.value;
+            if (formData.priority) {
+                currentStep = 4;
+                showStep(4);
+            }
+        });
+
+        // Back Button Handlers
+        document.getElementById('back2').addEventListener('click', () => {
+            currentStep = 1;
+            showStep(1);
+        });
+
+        document.getElementById('back3').addEventListener('click', () => {
+            currentStep = 2;
+            showStep(2);
+        });
+
+        document.getElementById('back4').addEventListener('click', () => {
+            currentStep = 3;
+            showStep(3);
+        });
+
+        // Final Submission
+        document.getElementById('submitForm').addEventListener('click', () => {
+            const email = document.getElementById('userEmail').value;
+            if (validateEmail(email)) {
+                formData.email = email;
+                
+                // Store completion in localStorage
+                localStorage.setItem('resistanceInitiated', 'true');
+                
+                // Here you would replace with your Telegram bot API endpoint
+                /*
+                fetch('https://api.telegram.org/botYOUR_BOT_TOKEN/sendMessage', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: YOUR_CHAT_ID,
+                        text: `New Resistance Recruit:\n\nSource: ${formData.source}\nStands with cause: ${formData.standsWithCause}\nPriority: ${formData.priority}\nEmail: ${formData.email}`
+                    })
+                })
+                */
+                
+                showHomepage();
+            } else {
+                alert('Please enter a valid email address');
+            }
+        });
+
+        // Profile popup functionality
+        document.getElementById('profileIcon').addEventListener('click', function(e) {
+            e.stopPropagation();
+            const popup = document.getElementById('profilePopup');
+            popup.style.display = popup.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        document.querySelector('.logout-btn').addEventListener('click', function() {
+            // Clear the initiation status
+            localStorage.removeItem('resistanceInitiated');
+            
+            // Hide homepage and show login form
+            document.getElementById('homepage').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'flex';
+            
+            // Reset form progress
+            currentStep = 1;
+            showStep(1);
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.getElementById('userEmail').value = '';
+            
+            // Reset form data
+            formData.source = null;
+            formData.standsWithCause = null;
+            formData.priority = null;
+            formData.email = null;
+            
+            // Hide popup
+            document.getElementById('profilePopup').style.display = 'none';
+        });
+
+        // Contact email click handler
+        document.getElementById('contactEmail').addEventListener('click', function() {
+            window.location.href = 'mailto:lawglitch@gmail.com';
+        });
+
+        // Close popup when clicking elsewhere
+        document.addEventListener('click', function() {
+            document.getElementById('profilePopup').style.display = 'none';
+        });
+
+        // Helper Functions
+        function showStep(stepNumber) {
+            document.querySelectorAll('.form-step').forEach(step => {
+                step.classList.remove('active');
+            });
+            document.getElementById(`step${stepNumber}`).classList.add('active');
+        }
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showHomepage() {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('homepage').style.display = 'block';
+        }
+
+        // Block DevTools quietly
+        document.addEventListener('keydown', function(e) {
+            // F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+Shift+C, Ctrl+U
+            if (e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) || 
+                (e.ctrlKey && e.key === 'u')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+        
+        // Block right-click
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            return false;
+        });
+    </script>
+</body>
+</html>

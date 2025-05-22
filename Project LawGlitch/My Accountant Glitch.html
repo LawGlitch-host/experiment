@@ -1,0 +1,2624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Accountant Glitch</title>
+    <style>
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
+
+    :root {
+        --bg-dark: #0d0d0d;
+        --bg-darker: #080808;
+        --bg-charcoal: #1a1a1a;
+        --text-light: #eeeeee;
+        --text-muted: #cccccc;
+        --blood-red: #cc0000;
+        --dark-red: #660000;
+        --success-green: #006600;
+        --danger-red: #ff4444;
+        --glow-red: 0 0 10px rgba(204, 0, 0, 0.7);
+        --glow-gray: 0 0 10px rgba(150, 150, 150, 0.5);
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Rajdhani', sans-serif;
+        background-color: var(--bg-dark);
+        background-image: 
+            radial-gradient(circle at 25% 25%, rgba(204, 0, 0, 0.1) 0%, transparent 50%),
+            linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, var(--bg-dark) 100%);
+        color: var(--text-light);
+        line-height: 1.6;
+        letter-spacing: 0.5px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 1.5rem;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(to right, var(--bg-darker), var(--bg-charcoal));
+        color: var(--text-light);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border-bottom: 3px solid var(--blood-red);
+        position: relative;
+        overflow: hidden;
+    }
+
+    header::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(to right, transparent, var(--blood-red), transparent);
+        animation: scanline 8s linear infinite;
+    }
+
+    @keyframes scanline {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    header h1 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.8rem;
+        margin: 0;
+        text-transform: uppercase;
+        color: var(--blood-red);
+        text-shadow: 0 0 8px rgba(204, 0, 0, 0.5);
+        letter-spacing: 2px;
+    }
+
+    .btn {
+        padding: 0.8rem 1.5rem;
+        border: 1px solid var(--blood-red);
+        border-radius: 0;
+        background-color: transparent;
+        color: var(--text-light);
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(204, 0, 0, 0.2), transparent);
+        transition: all 0.6s ease;
+    }
+
+    .btn:hover {
+        box-shadow: var(--glow-red);
+        transform: translateY(-2px);
+    }
+
+    .btn:hover::before {
+        left: 100%;
+    }
+
+    .btn.generate {
+        border-color: var(--blood-red);
+        color: var(--blood-red);
+    }
+
+    .btn.generate:hover {
+        background-color: rgba(204, 0, 0, 0.1);
+    }
+
+    .save-button-container {
+        text-align: center;
+        margin-top: 2rem;
+        padding-bottom: 2rem;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+    }
+
+    .btn.save {
+        background-color: var(--blood-red);
+        color: var(--text-light);
+        margin: 2rem 0;
+        padding: 0.9rem 2.2rem;
+        font-size: 1.1rem;
+        display: block;
+        width: fit-content;
+        border: none;
+    }
+
+    .btn.save:hover {
+        background-color: #aa0000;
+        box-shadow: var(--glow-red);
+    }
+
+    .btn.secondary {
+        border-color: #555;
+        color: var(--text-muted);
+    }
+
+    .btn.secondary:hover {
+        box-shadow: var(--glow-gray);
+        color: var(--text-light);
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+
+    .input-group label {
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .input-group input,
+    .input-group select {
+        padding: 0.7rem;
+        font-size: 0.95rem;
+        border: 1px solid #333;
+        background-color: rgba(0, 0, 0, 0.3);
+        color: var(--text-light);
+        width: 100%;
+        box-sizing: border-box;
+        transition: all 0.3s ease;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+        outline: none;
+        border-color: var(--blood-red);
+        box-shadow: 0 0 8px rgba(204, 0, 0, 0.3);
+    }
+
+    .input-group select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23cccccc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.7rem center;
+        background-size: 1rem;
+        padding-right: 2.2rem;
+    }
+
+    .basic-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .section {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background-color: var(--bg-charcoal);
+        border: 1px solid var(--dark-red);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .section:hover {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        transform: translateY(-2px);
+    }
+
+    .section h2 {
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+        color: var(--blood-red);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: 'Orbitron', sans-serif;
+        cursor: pointer;
+        position: relative;
+        padding-bottom: 0.5rem;
+    }
+
+    .section h2::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background-color: var(--blood-red);
+    }
+
+    .section-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1rem;
+        align-items: end;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .suggestion-box {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        margin-top: -0.5rem;
+        margin-bottom: 0.8rem;
+        font-style: italic;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background-color: var(--bg-charcoal);
+        border: 1px solid #333;
+        margin: 1.5rem 0;
+        font-size: 0.95rem;
+    }
+
+    th, td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid #333;
+    }
+
+    th {
+        background-color: rgba(0, 0, 0, 0.3);
+        font-weight: 700;
+        color: var(--blood-red);
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 1px;
+    }
+
+    tr:nth-child(even) {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    tr:hover {
+        background-color: rgba(204, 0, 0, 0.05);
+    }
+
+    td input, td select {
+        width: 100%;
+        padding: 0.6rem;
+        border: 1px solid #333;
+        background-color: rgba(0, 0, 0, 0.2);
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+
+    .tax-section {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 1.5rem;
+        border: 1px solid #333;
+        margin: 1.5rem 0;
+    }
+
+    .entries-table {
+        margin-top: 2rem;
+        background-color: var(--bg-charcoal);
+        padding: 1.5rem;
+        border: 1px solid var(--dark-red);
+    }
+    
+    .entries-table h3 {
+        margin-bottom: 1.5rem;
+        font-size: 1.3rem;
+        color: var(--blood-red);
+        font-family: 'Orbitron', sans-serif;
+        text-transform: uppercase;
+    }
+    
+    .action-btn {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.1rem;
+        margin: 0 5px;
+        color: var(--text-muted);
+        transition: all 0.3s ease;
+    }
+    
+    .action-btn:hover {
+        color: var(--blood-red);
+        transform: scale(1.2);
+    }
+
+    /* Delete All Button Styles */
+    .delete-all-container {
+        text-align: center;
+        margin: 3rem 0;
+        padding: 1.5rem;
+        border-top: 1px solid #333;
+        border-bottom: 1px solid #333;
+    }
+
+    .btn.delete-all {
+        background-color: transparent;
+        color: var(--danger-red);
+        padding: 1rem 2.5rem;
+        font-size: 1.1rem;
+        border: 1px solid var(--danger-red);
+        border-radius: 0;
+        transition: all 0.4s ease;
+    }
+
+    .btn.delete-all:hover {
+        background-color: rgba(255, 68, 68, 0.1);
+        box-shadow: 0 0 15px rgba(255, 68, 68, 0.4);
+        transform: translateY(-3px);
+    }
+
+    .btn.delete-all:active {
+        transform: translateY(0);
+    }
+
+    .btn.delete-all::before {
+        content: "⚠";
+        margin-right: 10px;
+    }
+
+    .btn.delete-all.loading::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 68, 68, 0.2), transparent);
+        animation: loadingShimmer 1.5s infinite;
+    }
+
+    @keyframes loadingShimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    /* Confirmation Modal Styles */
+    .confirmation-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-content {
+        background-color: var(--bg-charcoal);
+        padding: 2.5rem;
+        border: 1px solid var(--blood-red);
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 0 30px rgba(204, 0, 0, 0.3);
+        text-align: center;
+        animation: modalFadeIn 0.4s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+        from { opacity: 0; transform: translateY(-30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-buttons {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .modal-btn {
+        padding: 0.8rem 1.8rem;
+        border: none;
+        border-radius: 0;
+        cursor: pointer;
+        font-weight: 700;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+        letter-spacing: 1px;
+    }
+
+    .modal-btn.confirm {
+        background-color: var(--danger-red);
+        color: var(--text-light);
+    }
+
+    .modal-btn.confirm:hover {
+        background-color: #cc0000;
+        box-shadow: var(--glow-red);
+    }
+
+    .modal-btn.cancel {
+        background-color: transparent;
+        color: var(--text-muted);
+        border: 1px solid #555;
+    }
+
+    .modal-btn.cancel:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        color: var(--text-light);
+        box-shadow: var(--glow-gray);
+    }
+
+    /* Success message */
+    .success-message {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        background-color: var(--success-green);
+        color: white;
+        padding: 1.2rem 2.5rem;
+        border-radius: 0;
+        box-shadow: 0 0 20px rgba(0, 102, 0, 0.5);
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.4s ease;
+        z-index: 1001;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .success-message.show {
+        transform: translateY(0);
+        opacity: 1;
+    }
+
+    /* Responsive adjustments */
+    @media (min-width: 768px) {
+        .section-row {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+        }
+        
+        .section-row {
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        
+        .modal-buttons {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .success-message {
+            width: calc(100% - 40px);
+            right: 20px;
+            left: 20px;
+            text-align: center;
+        }
+    }
+  /* Profit Modal Styles */
+.profit-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+  animation: modalFadeIn 0.4s ease-out;
+}
+
+.profit-modal-content {
+  background-color: var(--bg-charcoal);
+  padding: 2rem;
+  border: 1px solid var(--blood-red);
+  max-width: 900px;
+  width: 90%;
+  box-shadow: 0 0 30px rgba(204, 0, 0, 0.3);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  color: var(--text-muted);
+  font-size: 1.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+  color: var(--blood-red);
+  transform: scale(1.1);
+}
+
+.date-selection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.chart-container {
+  width: 100%;
+  height: 300px;
+  margin: 1.5rem 0;
+}
+
+.financial-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.summary-card {
+  padding: 1rem;
+  border: 1px solid #333;
+  border-radius: 0;
+  text-align: center;
+}
+
+.summary-card h4 {
+  margin-top: 0;
+  color: var(--text-muted);
+}
+
+.summary-card p {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 0;
+}
+
+.summary-card.income {
+  border-color: var(--success-green);
+}
+
+.summary-card.expense {
+  border-color: var(--danger-red);
+}
+
+.summary-card.tax {
+  border-color: var(--blood-red);
+}
+
+.summary-card.profit {
+  border-color: var(--text-light);
+}
+
+.highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.highlight {
+  padding: 1rem;
+  border: 1px solid #333;
+  border-radius: 0;
+}
+
+.highlight h4 {
+  margin-top: 0;
+  color: var(--text-muted);
+}
+
+.best-day {
+  border-color: var(--success-green);
+}
+
+.worst-day {
+  border-color: var(--danger-red);
+}
+
+.tax-breakdown {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border-top: 1px solid var(--blood-red);
+}
+
+.tax-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 0.5rem 0;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #333;
+}
+
+@media (max-width: 768px) {
+  .date-selection {
+    grid-template-columns: 1fr;
+  }
+  
+  .financial-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .highlights {
+    grid-template-columns: 1fr;
+  }
+  
+  .chart-container {
+    height: 250px;
+  }
+}
+</style>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
+  </head>
+ 
+<body>
+  <div class="container">
+    <header>
+      <h1>My Accountant Glitch</h1>
+      <button id="generateBtn" class="btn generate">Download  Statements</button>
+    </header>
+
+    <section class="basic-info">
+      <div class="input-group">
+        <label for="fy">F.Y.</label>
+        <input type="text" id="fy" placeholder="MM/YYYY-MM/YYYY" />
+      </div>
+      <div class="input-group">
+        <label for="businessName">Business Name</label>
+        <input type="text" id="businessName" placeholder="Enter Name" />
+      </div>
+      <div class="input-group">
+        <label for="type">Type</label>
+        <select id="type">
+          <option value="partnership">Partnership</option>
+          <option value="llp">LLP</option>
+          <option value="pvtltd">Private Limited</option>
+          <option value="sole">Sole Proprietorship</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Daily Book Section -->
+    <section class="section" id="dailyBookSection">
+      <h2 onclick="setCurrentSection('dailyBook')">Daily Book</h2>
+      <div class="section-row">
+        <input type="date" id="entryDate" />
+        <select id="action">
+          <option value="received">Income Received</option>
+          <option value="paid">Expense Paid</option>
+          <option value="purchased">Purchase</option>
+          <option value="sold">Sale</option>
+          <option value="borrowed">Loan/Capital</option>
+          <option value="adjusted">Adjustment</option>
+          <option value="acquired">Asset Movement</option>
+          <option value="deducted">Tax Related</option>
+          <option value="custom">Other</option>
+        </select>
+        <input type="number" id="amount" placeholder="Amt (₹)" />
+        <select id="preposition">
+          <option value="to">To</option>
+          <option value="from">From</option>
+          <option value="for">For</option>
+          <option value="on">On</option>
+          <option value="via">Via</option>
+        </select>
+        <div class="input-group">
+          <label for="purpose">Purpose (Smart Match)</label>
+          <input list="purposeOptions" id="purpose" name="purpose" placeholder="Type or choose..." />
+          <datalist id="purposeOptions">
+            <option value="rent">
+            <option value="salary">
+            <option value="commission">
+            <option value="raw materials">
+            <option value="machinery">
+            <option value="electricity">
+            <option value="telephone">
+            <option value="travel">
+            <option value="software">
+            <option value="fuel">
+            <option value="bank charges">
+            <option value="product/service sale">
+            <option value="furniture">
+            <option value="computers">
+            <option value="vehicle">
+            <option value="building">
+            <option value="repairs">
+            <option value="business loans">
+            <option value="capital invested">
+            <option value="capital withdrawn">
+            <option value="loan repayment">
+            <option value="EMI">
+            <option value="interest">
+            <option value="advance">
+            <option value="security deposit">
+            <option value="office supplies">
+            <option value="stock">
+            <option value="capital goods">
+            <option value="decoration">
+            <option value="adjustments">
+            <option value="SaaS subscription">
+            <option value="app development">
+            <option value="UI/UX design">
+            <option value="digital tools">
+            <option value="software update">
+            <option value="license renewal">
+            <option value="server charges">
+            <option value="cloud services">
+            <option value="domain">
+            <option value="hosting">
+            <option value="hardware maintenance">
+            <option value="data storage">
+            <option value="cybersecurity">
+            <option value="bonus">
+            <option value="pension">
+            <option value="gratuity">
+            <option value="medical reimbursement">
+            <option value="HR consultancy">
+            <option value="employee onboarding">
+            <option value="exit settlement">
+            <option value="remote work setup">
+            <option value="mental health allowance">
+            <option value="internship stipend">
+            <option value="contract labour">
+            <option value="employee welfare">
+            <option value="audit fees">
+            <option value="legal fees">
+            <option value="consultation">
+            <option value="legal retainer">
+            <option value="valuation charges">
+            <option value="due diligence">
+            <option value="arbitration fees">
+            <option value="compensation">
+            <option value="legal settlement">
+            <option value="fine">
+            <option value="penalty">
+            <option value="loss recovery">
+            <option value="escrow payment">
+            <option value="reimbursement">
+            <option value="marketing">
+            <option value="advertising">
+            <option value="branding">
+            <option value="promotion">
+            <option value="client gifting">
+            <option value="event sponsorship">
+            <option value="influencer marketing">
+            <option value="affiliate payout">
+            <option value="lead purchase">
+            <option value="loyalty rewards">
+            <option value="inventory restocking">
+            <option value="overhead costs">
+            <option value="maintenance">
+            <option value="outsourcing">
+            <option value="quality control">
+            <option value="quality testing">
+            <option value="waste disposal">
+            <option value="tools">
+            <option value="equipment">
+            <option value="machine calibration">
+            <option value="factory rent">
+            <option value="site survey">
+            <option value="civil work">
+            <option value="interior design">
+            <option value="land lease">
+            <option value="blueprints">
+            <option value="fencing">
+            <option value="freight">
+            <option value="logistics">
+            <option value="fleet management">
+            <option value="toll charges">
+            <option value="vehicle maintenance">
+            <option value="driver salary">
+            <option value="govt charges">
+            <option value="filing fees">
+            <option value="stamp duty">
+            <option value="GST payment">
+            <option value="TDS payment">
+            <option value="income tax advance">
+            <option value="property tax">
+            <option value="municipal tax">
+            <option value="ESI contribution">
+            <option value="EPF contribution">
+            <option value="notary charges">
+            <option value="statutory dues">
+            <option value="subscription">
+            <option value="membership">
+            <option value="crypto transaction fee">
+            <option value="NFT purchase">
+            <option value="API usage">
+            <option value="e-commerce fee">
+            <option value="influencer payout">
+            <option value="business registration fees">
+            <option value="ROC filing fees">
+            <option value="share capital allotment">
+            <option value="incorporation charges">
+            <option value="company restructuring">
+            <option value="merger/acquisition cost">
+            <option value="investment income">
+            <option value="mutual fund investment">
+            <option value="dividend received">
+            <option value="equity investment">
+            <option value="loan disbursal">
+            <option value="interest received">
+            <option value="forex gain/loss">
+            <option value="refund issued">
+            <option value="advance received from customer">
+            <option value="customer overpayment">
+            <option value="write-off bad debt">
+            <option value="customer loyalty program">
+            <option value="credit note issued">
+            <option value="business insurance">
+            <option value="vehicle insurance">
+            <option value="cyber insurance">
+            <option value="property insurance">
+            <option value="insurance claim received">
+            <option value="export sales">
+            <option value="import duty">
+            <option value="custom clearance">
+            <option value="freight forwarding">
+            <option value="foreign agent commission">
+            <option value="journal adjustment">
+            <option value="suspense account entry">
+            <option value="rounding off adjustment">
+            <option value="prior period adjustment">
+            <option value="year-end provisioning">
+            <option value="Dividend Paid">
+          </datalist>
+        </div>
+
+        <select id="mode">
+          <option value="cash">Cash</option>
+          <option value="bank">Bank</option>
+          <option value="upi">UPI</option>
+          <option value="cheque">Cheque</option>
+        </select>
+      </div>
+      <div class="suggestion-box" id="suggestionBox"></div>
+      <div class="section-row">
+        <select id="status">
+          <option value="cleared">Cleared</option>
+          <option value="pending">Pending</option>
+          <option value="failed">Failed</option>
+        </select>
+        <input type="number" id="amountPending" placeholder="Amt Pending (₹)" />
+        <select id="partyType">
+          <option value="vendor">Vendor</option>
+          <option value="customer">Customer</option>
+          <option value="bank">Bank</option>
+          <option value="investor">Investor</option>
+          <option value="Government">Government</option>
+        </select>
+        <input type="text" id="partyName" placeholder="Party Name" />
+        <input type="text" id="invoiceNo" placeholder="Invoice No." />
+      </div>
+    </section>
+
+    <!-- Optional Tax Settings -->
+    <button id="expandTax" class="btn secondary" onclick="toggleTaxSettings()">+ Optional Tax Settings</button>
+
+    <div id="taxSettings" class="hidden">
+      <div class="tax-section">
+        <h3>Tax Settings</h3>
+        <div class="section-row">
+          <div class="input-group">
+            <label for="gstNumber">GST Number</label>
+            <input type="text" id="gstNumber" placeholder="22AAAAA0000A1Z5" />
+          </div>
+          <div class="input-group">
+            <label for="gstType">Type of GST</label>
+            <select id="gstType">
+              <option value="intra">Intra-State (CGST + SGST)</option>
+              <option value="inter">Inter-State (IGST)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="gstSlab">GST Slab Rates</label>
+            <select id="gstSlab">
+              <option value="0">0%</option>
+              <option value="0.1">0.1%</option>
+              <option value="3">3%</option>
+              <option value="5">5%</option>
+              <option value="12">12%</option>
+              <option value="18">18%</option>
+              <option value="28">28%</option>
+              <option value="comp1">Composition (1%)</option>
+              <option value="comp5">Composition (5%)</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="section-row">
+          <div class="input-group">
+            <label for="itcEligibility">ITC Eligibility</label>
+            <select id="itcEligibility">
+              <option value="yes">Yes</option>
+              <option value="no">No</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="customerType">Customer Type</label>
+            <select id="customerType">
+              <option value="registered">Registered</option>
+              <option value="unregistered">Unregistered</option>
+              <option value="composition">Composition Dealer</option>
+              <option value="sez">SEZ</option>
+              <option value="deemed">Deemed Export</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="tdsSection">TDS Section</label>
+            <select id="tdsSection">
+              <option value="">Select Section</option>
+              <option value="194C">194C - Contracts</option>
+              <option value="194J">194J - Professional Fees</option>
+              <option value="194H">194H - Commission/Brokerage</option>
+              <option value="194I(a)">194I(a) - Rent (Land/Building)</option>
+              <option value="194I(b)">194I(b) - Rent (Other)</option>
+              <option value="192">192 - Salaries</option>
+              <option value="194Q">194Q - Purchase of Goods</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="tdsRate">TDS Rate (%)</label>
+            <input type="text" id="tdsRate" readonly />
+          </div>
+        </div>
+        
+        <div class="section-row">
+          <div class="input-group">
+            <label for="panAvailable">PAN Available?</label>
+            <select id="panAvailable">
+              <option value="yes">Yes</option>
+              <option value="no">No (Double Rate)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="reverseCharge">Reverse Charge Applicable?</label>
+            <select id="reverseCharge">
+              <option value="no">No</option>
+              <option value="yes">Yes</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="rcmReason">Reason (for RCM)</label>
+            <select id="rcmReason">
+              <option value="">Select Reason</option>
+              <option value="import">Import of services</option>
+              <option value="urd">Purchase from URD</option>
+              <option value="notified">RCM notified services</option>
+              <option value="ecom">E-com RCM</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="section-row">
+          <div class="input-group">
+            <label for="exemptions">Exemptions (if any)</label>
+            <select id="exemptions">
+              <option value="">Select Exemption</option>
+              <option value="healthcare">Healthcare</option>
+              <option value="education">Education</option>
+              <option value="essential">Essential Goods</option>
+              <option value="agricultural">Agricultural services</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Daily Book Entries -->
+    <div class="entries-table">
+      <h3>Saved Daily Book Entries</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Action</th>
+            <th>Amount (₹)</th>
+            <th>Purpose</th>
+            <th>Mode</th>
+            <th>Party</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="dailyBookEntries"></tbody>
+      </table>
+    </div>
+<!-- Add this right after the closing </div> of the entries-table div -->
+<div class="check-profits-container" style="text-align: center; margin: 2rem 0;">
+  <button id="checkProfitsBtn" class="btn generate">Check Profits</button>
+</div>
+    <!-- Carry Forward Losses Section -->
+    <section class="section" id="lossesSection">
+      <h2 onclick="setCurrentSection('losses')">Carry Forward Losses</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Year of Loss</th>
+            <th>Amount of Loss (₹)</th>
+            <th>Loss Type</th>
+            <th>Taxable Year (Carry Forward)</th>
+            <th>Status</th>
+            <th>Amount Applied This Year (₹)</th>
+            <th>Remaining Loss (₹)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" id="lossYear" value="2024-2025" /></td>
+            <td><input type="number" id="lossAmount" value="0" /></td>
+            <td>
+              <select id="lossType">
+                <option>Business Loss</option>
+                <option>Capital Loss</option>
+                <option>Speculative Loss</option>
+                <option>Unabsorbed Depreciation</option>
+              </select>
+            </td>
+            <td><input type="text" id="carryForwardYear" value="2025-2026" /></td>
+            <td>
+              <select id="lossStatus">
+                <option>Remaining</option>
+                <option>Applied</option>
+                <option>Expired</option>
+              </select>
+            </td>
+            <td><input type="number" id="appliedAmount" value="0" /></td>
+            <td><input type="number" id="remainingAmount" value="0" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="entries-table">
+        <h3>Saved Loss Entries</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Year of Loss</th>
+              <th>Amount (₹)</th>
+              <th>Loss Type</th>
+              <th>Carry Forward Year</th>
+              <th>Status</th>
+              <th>Applied This Year (₹)</th>
+              <th>Remaining (₹)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="lossEntries"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Loan Book Section -->
+    <section class="section" id="loansSection">
+      <h2 onclick="setCurrentSection('loans')">Loan Book</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Loan ID</th>
+            <th>Loan Type</th>
+            <th>Lender</th>
+            <th>Principal Amount (₹)</th>
+            <th>Interest Rate (%)</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Repayment Frequency</th>
+            <th>Grace Period</th>
+            <th>Amortization Type</th>
+            <th>Balloon Payment (₹)</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="text" id="loanId" value="LOAN001" /></td>
+            <td>
+              <select id="loanType">
+                <option>Bank Loan</option>
+                <option>Personal Loan</option>
+                <option>NBFC Loan</option>
+                <option>Inter-Corporate</option>
+              </select>
+            </td>
+            <td><input type="text" id="lender" value="ABC Bank" /></td>
+            <td><input type="number" id="principalAmount" value="0" /></td>
+            <td><input type="number" id="interestRate" value="0" /></td>
+            <td><input type="date" id="startDate" value="2024-01-01" /></td>
+            <td><input type="date" id="endDate" value="2027-01-01" /></td>
+            <td>
+              <select id="repaymentFrequency">
+                <option>Monthly</option>
+                <option>Quarterly</option>
+                <option>Yearly</option>
+              </select>
+            </td>
+            <td><input type="text" id="gracePeriod" value="3 months" /></td>
+            <td>
+              <select id="amortizationType">
+                <option>SLM</option>
+                <option>WDV</option>
+              </select>
+            </td>
+            <td><input type="number" id="balloonPayment" value="0" /></td>
+            <td>
+              <select id="loanStatus">
+                <option>Active</option>
+                <option>Closed</option>
+                <option>Defaulted</option>
+              </select>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="entries-table">
+        <h3>Saved Loan Entries</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Loan ID</th>
+              <th>Type</th>
+              <th>Lender</th>
+              <th>Principal (₹)</th>
+              <th>Interest Rate</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="loanEntries"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Asset Register Section -->
+    <section class="section" id="assetsSection">
+      <h2 onclick="setCurrentSection('assets')">Asset Register</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Asset Name</th>
+            <th>Type</th>
+            <th>Purchase Value (₹)</th>
+            <th>Purchase Date</th>
+            <th>Depreciation % W.D.V method</th>
+            <th>Current Year Value (₹)</th>
+            <th>Notes (Use/Sale/Repair etc.)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="date" id="assetDate" /></td>
+            <td><input type="text" id="assetName" placeholder="Laptop / Vehicle / Equipment" /></td>
+            <td>
+              <select id="assetType">
+                <option>Electronics</option>
+                <option>Plant & Machinery</option>
+                <option>Furniture</option>
+                <option>Vehicle</option>
+                <option>Real Estate</option>
+                <option>Stocks/Mutual funds etc.</option>
+                <option>Precious metals</option>
+                <option>others</option>
+              </select>
+            </td>
+            <td><input type="number" id="purchaseValue" /></td>
+            <td><input type="date" id="purchaseDate" /></td>
+            <td><input type="number" id="depreciation" /></td>
+            <td><input type="number" id="currentValue" /></td>
+            <td><input type="text" id="assetNotes" /></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="entries-table">
+        <h3>Saved Asset Entries</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Asset Name</th>
+              <th>Type</th>
+              <th>Purchase Value (₹)</th>
+              <th>Purchase Date</th>
+              <th>Depreciation %</th>
+              <th>Current Value (₹)</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="assetEntries"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Inventory Book Section -->
+    <section class="section" id="inventorySection">
+      <h2 onclick="setCurrentSection('inventory')">Inventory Book</h2>
+      <div class="input-group">
+        <label>Opening Stock Value (₹)</label>
+        <input type="number" id="openingStock" />
+      </div>
+      <div class="input-group">
+        <label>Item Name + Quantity + Rate (Optional)</label>
+        <input type="text" id="openingItems" placeholder="Example: item A, 100 units, ₹25 each" />
+      </div>
+      <div class="input-group">
+        <label>Closing Stock Value (₹)</label>
+        <input type="number" id="closingStock" />
+      </div>
+      <div class="input-group">
+        <label>Item Name + Quantity + Rate (Optional)</label>
+        <input type="text" id="closingItems" placeholder="Example: item B, 50 units, ₹30 each" />
+      </div>
+
+      <div class="entries-table">
+        <h3>Saved Inventory Entries</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Opening Value (₹)</th>
+              <th>Items</th>
+              <th>Closing Value (₹)</th>
+              <th>Closing Items</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryEntries"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="save-button-container">
+      <button id="saveEntry" class="btn save">Save Entries</button>
+    </div>
+	<!-- Delete All Button -->
+<div class="delete-all-container">
+  <button id="deleteAllBtn" class="btn delete-all">Delete All Saved Entries</button>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmationModal" class="confirmation-modal">
+  <div class="modal-content">
+    <h3>⚠️ Confirm Deletion</h3>
+    <p>Are you sure you want to delete ALL saved entries? This action cannot be undone and will permanently remove:</p>
+    <ul style="text-align: left; margin: 1rem 0; padding-left: 1.5rem;">
+      <li>All daily book entries</li>
+      <li>All loss entries</li>
+      <li>All loan entries</li>
+      <li>All asset entries</li>
+      <li>All inventory entries</li>
+    </ul>
+    <div class="modal-buttons">
+      <button id="confirmDeleteBtn" class="modal-btn confirm">Yes, Delete All</button>
+      <button id="cancelDeleteBtn" class="modal-btn cancel">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Success Message -->
+<div id="successMessage" class="success-message">
+  All entries have been successfully deleted!
+</div>
+    <!-- Profit Analysis Modal -->
+<div id="profitModal" class="profit-modal">
+  <div class="profit-modal-content">
+    <span class="close-modal">&times;</span>
+    <h3>Profit Analysis</h3>
+    
+    <div class="date-selection">
+      <div class="input-group">
+        <label for="profitStartDate">Start Date</label>
+        <input type="date" id="profitStartDate" class="date-picker">
+      </div>
+      <div class="input-group">
+        <label for="profitEndDate">End Date</label>
+        <input type="date" id="profitEndDate" class="date-picker">
+      </div>
+    </div>
+    
+    <button id="calculateProfitBtn" class="btn save" style="margin: 1rem auto;">Calculate Profit</button>
+    
+    <div class="results-container hidden">
+      <div class="chart-container">
+        <canvas id="profitChart"></canvas>
+      </div>
+      
+      <div class="financial-summary">
+        <div class="summary-card income">
+          <h4>Total Income</h4>
+          <p id="totalIncome">₹0.00</p>
+        </div>
+        <div class="summary-card expense">
+          <h4>Total Expenses</h4>
+          <p id="totalExpense">₹0.00</p>
+        </div>
+        <div class="summary-card tax">
+          <h4>Taxes Paid</h4>
+          <p id="totalTax">₹0.00</p>
+        </div>
+        <div class="summary-card profit">
+          <h4>Net Profit</h4>
+          <p id="netProfit">₹0.00</p>
+        </div>
+      </div>
+      
+      <div class="highlights">
+        <div class="highlight best-day">
+          <h4>Best Day</h4>
+          <p id="bestDayText">-</p>
+        </div>
+        <div class="highlight worst-day">
+          <h4>Worst Day</h4>
+          <p id="worstDayText">-</p>
+        </div>
+      </div>
+      
+      <div class="tax-breakdown">
+        <h4>Tax Breakdown</h4>
+        <div class="tax-item">
+          <span>GST Collected</span>
+          <span id="gstCollected">₹0.00</span>
+        </div>
+        <div class="tax-item">
+          <span>GST Paid</span>
+          <span id="gstPaid">₹0.00</span>
+        </div>
+        <div class="tax-item">
+          <span>TDS Deducted</span>
+          <span id="tdsDeducted">₹0.00</span>
+        </div>
+        <div class="tax-item">
+          <span>TDS Collected</span>
+          <span id="tdsCollected">₹0.00</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    // Initialize all entries from localStorage or empty arrays
+    let entries = {
+      dailyBook: JSON.parse(localStorage.getItem('dailyBookEntries')) || [],
+      losses: JSON.parse(localStorage.getItem('lossEntries')) || [],
+      loans: JSON.parse(localStorage.getItem('loanEntries')) || [],
+      assets: JSON.parse(localStorage.getItem('assetEntries')) || [],
+      inventory: JSON.parse(localStorage.getItem('inventoryEntries')) || [],
+      taxSettings: JSON.parse(localStorage.getItem('taxSettings')) || {}
+    };
+    
+    let editIndex = {
+      dailyBook: -1,
+      losses: -1,
+      loans: -1,
+      assets: -1,
+      inventory: -1
+    };
+    
+    let currentSection = 'dailyBook'; // Track which section is being edited
+
+    // TDS section rates mapping
+    const tdsRates = {
+      '194C': '1%',
+      '194J': '10%',
+      '194H': '5%',
+      '194I(a)': '10%',
+      '194I(b)': '2%',
+      '192': 'Slab-based',
+      '194Q': '0.1%'
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      renderAllTables();
+      setTodayDate();
+      setupEventListeners();
+      loadTaxSettings();
+      
+      // Set up TDS section change listener
+      document.getElementById('tdsSection').addEventListener('change', function() {
+        const section = this.value;
+        document.getElementById('tdsRate').value = tdsRates[section] || '';
+      });
+    });
+
+    // Set the current active section
+    function setCurrentSection(section) {
+      currentSection = section;
+    }
+
+    function renderAllTables() {
+      renderTable('dailyBook', 'dailyBookEntries', [
+        'date', 'action', 'amount', 'purpose', 'mode', 
+        'partyType', 'status'
+      ]);
+      
+      renderTable('losses', 'lossEntries', [
+        'year', 'amount', 'type', 'carryForwardYear', 
+        'status', 'applied', 'remaining'
+      ]);
+      
+      renderTable('loans', 'loanEntries', [
+        'id', 'type', 'lender', 'principal', 
+        'interestRate', 'startDate', 'endDate'
+      ]);
+      
+      renderTable('assets', 'assetEntries', [
+        'date', 'name', 'type', 'purchaseValue', 
+        'purchaseDate', 'depreciation', 'currentValue'
+      ]);
+      
+      renderTable('inventory', 'inventoryEntries', [
+        'openingValue', 'items', 'closingValue', 'closingItems'
+      ]);
+    }
+
+    function renderTable(section, tableId, fields) {
+      const tbody = document.getElementById(tableId);
+      tbody.innerHTML = '';
+
+      if (entries[section].length === 0) {
+        tbody.innerHTML = `<tr><td colspan="${fields.length + 1}" style="text-align:center;">No entries yet</td></tr>`;
+        return;
+      }
+
+      entries[section].forEach((entry, index) => {
+        const row = document.createElement('tr');
+        let cells = '';
+        
+        fields.forEach(field => {
+          cells += `<td>${entry[field] || '-'}</td>`;
+        });
+        
+        cells += `
+          <td>
+            <button class="action-btn" onclick="editExistingEntry('${section}', ${index})">✏️</button>
+            <button class="action-btn" onclick="deleteEntry('${section}', ${index})">🗑️</button>
+          </td>
+        `;
+        
+        row.innerHTML = cells;
+        tbody.appendChild(row);
+      });
+    }
+
+    function saveToLocal() {
+      localStorage.setItem('dailyBookEntries', JSON.stringify(entries.dailyBook));
+      localStorage.setItem('lossEntries', JSON.stringify(entries.losses));
+      localStorage.setItem('loanEntries', JSON.stringify(entries.loans));
+      localStorage.setItem('assetEntries', JSON.stringify(entries.assets));
+      localStorage.setItem('inventoryEntries', JSON.stringify(entries.inventory));
+      localStorage.setItem('taxSettings', JSON.stringify(entries.taxSettings));
+    }
+
+    function loadTaxSettings() {
+      const taxFields = [
+        'gstNumber', 'gstType', 'gstSlab', 'itcEligibility', 'customerType',
+        'tdsSection', 'tdsRate', 'panAvailable', 'reverseCharge', 'rcmReason', 'exemptions'
+      ];
+      
+      taxFields.forEach(field => {
+        if (entries.taxSettings[field]) {
+          document.getElementById(field).value = entries.taxSettings[field];
+        }
+      });
+    }
+
+    function saveTaxSettings() {
+      entries.taxSettings = {
+        gstNumber: document.getElementById('gstNumber').value,
+        gstType: document.getElementById('gstType').value,
+        gstSlab: document.getElementById('gstSlab').value,
+        itcEligibility: document.getElementById('itcEligibility').value,
+        customerType: document.getElementById('customerType').value,
+        tdsSection: document.getElementById('tdsSection').value,
+        tdsRate: document.getElementById('tdsRate').value,
+        panAvailable: document.getElementById('panAvailable').value,
+        reverseCharge: document.getElementById('reverseCharge').value,
+        rcmReason: document.getElementById('rcmReason').value,
+        exemptions: document.getElementById('exemptions').value
+      };
+      saveToLocal();
+    }
+
+    function setupEventListeners() {
+      document.getElementById('saveEntry').addEventListener('click', saveAllEntries);
+      document.getElementById('clearAllData').addEventListener('click', clearAllData);
+      
+      // Save tax settings when they change
+      document.querySelectorAll('#taxSettings input, #taxSettings select').forEach(el => {
+        el.addEventListener('change', saveTaxSettings);
+      });
+    }
+
+    function saveAllEntries() {
+      // Save tax settings first
+      saveTaxSettings();
+      
+      // Save all sections' entries
+      saveDailyBookEntry();
+      saveLossEntry();
+      saveLoanEntry();
+      saveAssetEntry();
+      saveInventoryEntry();
+      
+      saveToLocal();
+      renderAllTables();
+      alert('All entries saved successfully!');
+    }
+
+    function clearAllData() {
+      if (confirm('Are you sure you want to clear ALL data? This cannot be undone. (Tax settings will be preserved)')) {
+        entries.dailyBook = [];
+        entries.losses = [];
+        entries.loans = [];
+        entries.assets = [];
+        entries.inventory = [];
+        
+        saveToLocal();
+        renderAllTables();
+        clearAllFields();
+        alert('All data cleared (except tax settings)');
+      }
+    }
+
+    function clearAllFields() {
+      clearDailyBookFields();
+      clearLossFields();
+      clearLoanFields();
+      clearAssetFields();
+      clearInventoryFields();
+    }
+
+    function saveDailyBookEntry() {
+      const entry = {
+        date: document.getElementById('entryDate').value,
+        action: document.getElementById('action').value,
+        amount: parseFloat(document.getElementById('amount').value) || 0,
+        preposition: document.getElementById('preposition').value,
+        purpose: document.getElementById('purpose').value,
+        mode: document.getElementById('mode').value,
+        status: document.getElementById('status').value,
+        amountPending: parseFloat(document.getElementById('amountPending').value) || 0,
+        partyType: document.getElementById('partyType').value,
+        partyName: document.getElementById('partyName').value,
+        invoiceNo: document.getElementById('invoiceNo').value
+      };
+
+      if (editIndex.dailyBook === -1) {
+        entries.dailyBook.push(entry);
+      } else {
+        entries.dailyBook[editIndex.dailyBook] = entry;
+        editIndex.dailyBook = -1;
+      }
+    }
+
+    function saveLossEntry() {
+      const entry = {
+        year: document.getElementById('lossYear').value,
+        amount: parseFloat(document.getElementById('lossAmount').value) || 0,
+        type: document.getElementById('lossType').value,
+        carryForwardYear: document.getElementById('carryForwardYear').value,
+        status: document.getElementById('lossStatus').value,
+        applied: parseFloat(document.getElementById('appliedAmount').value) || 0,
+        remaining: parseFloat(document.getElementById('remainingAmount').value) || 0
+      };
+
+      if (editIndex.losses === -1) {
+        entries.losses.push(entry);
+      } else {
+        entries.losses[editIndex.losses] = entry;
+        editIndex.losses = -1;
+      }
+    }
+
+    function saveLoanEntry() {
+      const entry = {
+        id: document.getElementById('loanId').value,
+        type: document.getElementById('loanType').value,
+        lender: document.getElementById('lender').value,
+        principal: parseFloat(document.getElementById('principalAmount').value) || 0,
+        interestRate: parseFloat(document.getElementById('interestRate').value) || 0,
+        startDate: document.getElementById('startDate').value,
+        endDate: document.getElementById('endDate').value,
+        repaymentFrequency: document.getElementById('repaymentFrequency').value,
+        gracePeriod: document.getElementById('gracePeriod').value,
+        amortizationType: document.getElementById('amortizationType').value,
+        balloonPayment: parseFloat(document.getElementById('balloonPayment').value) || 0,
+        status: document.getElementById('loanStatus').value
+      };
+
+      if (editIndex.loans === -1) {
+        entries.loans.push(entry);
+      } else {
+        entries.loans[editIndex.loans] = entry;
+        editIndex.loans = -1;
+      }
+    }
+
+    function saveAssetEntry() {
+      const entry = {
+        date: document.getElementById('assetDate').value,
+        name: document.getElementById('assetName').value,
+        type: document.getElementById('assetType').value,
+        purchaseValue: parseFloat(document.getElementById('purchaseValue').value) || 0,
+        purchaseDate: document.getElementById('purchaseDate').value,
+        depreciation: parseFloat(document.getElementById('depreciation').value) || 0,
+        currentValue: parseFloat(document.getElementById('currentValue').value) || 0,
+        notes: document.getElementById('assetNotes').value
+      };
+
+      if (editIndex.assets === -1) {
+        entries.assets.push(entry);
+      } else {
+        entries.assets[editIndex.assets] = entry;
+        editIndex.assets = -1;
+      }
+    }
+
+    function saveInventoryEntry() {
+      const entry = {
+        openingValue: parseFloat(document.getElementById('openingStock').value) || 0,
+        items: document.getElementById('openingItems').value,
+        closingValue: parseFloat(document.getElementById('closingStock').value) || 0,
+        closingItems: document.getElementById('closingItems').value
+      };
+
+      if (editIndex.inventory === -1) {
+        entries.inventory.push(entry);
+      } else {
+        entries.inventory[editIndex.inventory] = entry;
+        editIndex.inventory = -1;
+      }
+    }
+
+    function editExistingEntry(section, index) {
+      currentSection = section;
+      const entry = entries[section][index];
+      editIndex[section] = index;
+      
+      if (section === 'dailyBook') {
+        document.getElementById('entryDate').value = entry.date;
+        document.getElementById('action').value = entry.action;
+        document.getElementById('amount').value = entry.amount;
+        document.getElementById('preposition').value = entry.preposition;
+        document.getElementById('purpose').value = entry.purpose;
+        document.getElementById('mode').value = entry.mode;
+        document.getElementById('status').value = entry.status;
+        document.getElementById('amountPending').value = entry.amountPending || '';
+        document.getElementById('partyType').value = entry.partyType;
+        document.getElementById('partyName').value = entry.partyName;
+        document.getElementById('invoiceNo').value = entry.invoiceNo || '';
+      } else if (section === 'losses') {
+        document.getElementById('lossYear').value = entry.year;
+        document.getElementById('lossAmount').value = entry.amount;
+        document.getElementById('lossType').value = entry.type;
+        document.getElementById('carryForwardYear').value = entry.carryForwardYear;
+        document.getElementById('lossStatus').value = entry.status;
+        document.getElementById('appliedAmount').value = entry.applied;
+        document.getElementById('remainingAmount').value = entry.remaining;
+      } else if (section === 'loans') {
+        document.getElementById('loanId').value = entry.id;
+        document.getElementById('loanType').value = entry.type;
+        document.getElementById('lender').value = entry.lender;
+        document.getElementById('principalAmount').value = entry.principal;
+        document.getElementById('interestRate').value = entry.interestRate;
+        document.getElementById('startDate').value = entry.startDate;
+        document.getElementById('endDate').value = entry.endDate;
+        document.getElementById('repaymentFrequency').value = entry.repaymentFrequency;
+        document.getElementById('gracePeriod').value = entry.gracePeriod;
+        document.getElementById('amortizationType').value = entry.amortizationType;
+        document.getElementById('balloonPayment').value = entry.balloonPayment;
+        document.getElementById('loanStatus').value = entry.status;
+      } else if (section === 'assets') {
+        document.getElementById('assetDate').value = entry.date;
+        document.getElementById('assetName').value = entry.name;
+        document.getElementById('assetType').value = entry.type;
+        document.getElementById('purchaseValue').value = entry.purchaseValue;
+        document.getElementById('purchaseDate').value = entry.purchaseDate;
+        document.getElementById('depreciation').value = entry.depreciation;
+        document.getElementById('currentValue').value = entry.currentValue;
+        document.getElementById('assetNotes').value = entry.notes || '';
+      } else if (section === 'inventory') {
+        document.getElementById('openingStock').value = entry.openingValue;
+        document.getElementById('openingItems').value = entry.items || '';
+        document.getElementById('closingStock').value = entry.closingValue;
+        document.getElementById('closingItems').value = entry.closingItems || '';
+      }
+      
+      // Scroll to the relevant section
+      document.getElementById(`${section}Section`).scrollIntoView({
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+
+    function deleteEntry(section, index) {
+      if (confirm('Are you sure you want to delete this entry?')) {
+        entries[section].splice(index, 1);
+        saveToLocal();
+        renderAllTables();
+      }
+    }
+
+    function clearDailyBookFields() {
+      document.getElementById('entryDate').value = '';
+      document.getElementById('amount').value = '';
+      document.getElementById('purpose').value = '';
+      document.getElementById('amountPending').value = '';
+      document.getElementById('partyName').value = '';
+      document.getElementById('invoiceNo').value = '';
+      setTodayDate();
+    }
+
+    function clearLossFields() {
+      document.getElementById('lossYear').value = '';
+      document.getElementById('lossAmount').value = '';
+      document.getElementById('carryForwardYear').value = '';
+      document.getElementById('appliedAmount').value = '';
+      document.getElementById('remainingAmount').value = '';
+    }
+
+    function clearLoanFields() {
+      document.getElementById('loanId').value = '';
+      document.getElementById('lender').value = '';
+      document.getElementById('principalAmount').value = '';
+      document.getElementById('interestRate').value = '';
+      document.getElementById('startDate').value = '';
+      document.getElementById('endDate').value = '';
+      document.getElementById('balloonPayment').value = '';
+    }
+
+    function clearAssetFields() {
+      document.getElementById('assetDate').value = '';
+      document.getElementById('assetName').value = '';
+      document.getElementById('purchaseValue').value = '';
+      document.getElementById('purchaseDate').value = '';
+      document.getElementById('depreciation').value = '';
+      document.getElementById('currentValue').value = '';
+      document.getElementById('assetNotes').value = '';
+    }
+
+    function clearInventoryFields() {
+      document.getElementById('openingStock').value = '';
+      document.getElementById('openingItems').value = '';
+      document.getElementById('closingStock').value = '';
+      document.getElementById('closingItems').value = '';
+    }
+
+    function setTodayDate() {
+      const today = new Date();
+      const formattedDate = today.toISOString().substr(0, 10);
+      document.getElementById('entryDate').value = formattedDate;
+    }
+
+    function toggleTaxSettings() {
+      const taxSettings = document.getElementById('taxSettings');
+      const expandBtn = document.getElementById('expandTax');
+      
+      if (taxSettings.classList.contains('hidden')) {
+        taxSettings.classList.remove('hidden');
+        expandBtn.textContent = '- Hide Tax Settings';
+      } else {
+        taxSettings.classList.add('hidden');
+        expandBtn.textContent = '+ Optional Tax Settings';
+      }
+    }
+
+    // Smart suggestions based on purpose
+    document.getElementById('purpose').addEventListener('input', function(e) {
+      const purpose = e.target.value.toLowerCase();
+      const suggestionBox = document.getElementById('suggestionBox');
+      
+      if (purpose.includes('rent')) {
+        suggestionBox.textContent = 'Suggestion: Consider categorizing as "Business Rent Expense" for tax deductions';
+      } else if (purpose.includes('salary')) {
+        suggestionBox.textContent = 'Suggestion: Remember to account for TDS and PF contributions if applicable';
+      } else if (purpose.includes('travel')) {
+        suggestionBox.textContent = 'Suggestion: Business travel expenses are typically 100% deductible';
+      } else {
+        suggestionBox.textContent = '';
+      }
+    });
+	// Delete All Entries Functionality
+document.addEventListener('DOMContentLoaded', function() {
+  const deleteAllBtn = document.getElementById('deleteAllBtn');
+  const confirmationModal = document.getElementById('confirmationModal');
+  const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+  const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+  const successMessage = document.getElementById('successMessage');
+  
+  // Show confirmation modal when delete button is clicked
+  deleteAllBtn.addEventListener('click', function() {
+    confirmationModal.style.display = 'flex';
+  });
+  
+  // Hide modal when cancel is clicked
+  cancelDeleteBtn.addEventListener('click', function() {
+    confirmationModal.style.display = 'none';
+  });
+  
+  // Handle confirmation of deletion
+  confirmDeleteBtn.addEventListener('click', function() {
+    // Show loading state
+    deleteAllBtn.classList.add('loading');
+    confirmDeleteBtn.disabled = true;
+    confirmDeleteBtn.textContent = 'Deleting...';
+    
+    // Simulate processing delay (remove this in production)
+    setTimeout(function() {
+      // Delete all entries from localStorage
+      localStorage.removeItem('dailyBookEntries');
+      localStorage.removeItem('lossEntries');
+      localStorage.removeItem('loanEntries');
+      localStorage.removeItem('assetEntries');
+      localStorage.removeItem('inventoryEntries');
+      
+      // Reset the entries object
+      entries = {
+        dailyBook: [],
+        losses: [],
+        loans: [],
+        assets: [],
+        inventory: [],
+        taxSettings: entries.taxSettings // Preserve tax settings
+      };
+      
+      // Reset edit indices
+      editIndex = {
+        dailyBook: -1,
+        losses: -1,
+        loans: -1,
+        assets: -1,
+        inventory: -1
+      };
+      
+      // Re-render all tables
+      renderAllTables();
+      
+      // Hide modal
+      confirmationModal.style.display = 'none';
+      
+      // Reset button states
+      deleteAllBtn.classList.remove('loading');
+      confirmDeleteBtn.disabled = false;
+      confirmDeleteBtn.textContent = 'Yes, Delete All';
+      
+      // Show success message
+      successMessage.classList.add('show');
+      
+      // Hide success message after 3 seconds
+      setTimeout(function() {
+        successMessage.classList.remove('show');
+      }, 3000);
+      
+    }, 1000); // Simulated processing delay
+  });
+  
+  // Close modal when clicking outside the content
+  confirmationModal.addEventListener('click', function(e) {
+    if (e.target === confirmationModal) {
+      confirmationModal.style.display = 'none';
+    }
+  });
+});
+  </script>
+ <style>
+  /* Loading Screen Styles - Enhanced */
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    color: white;
+    font-family: 'Orbitron', sans-serif;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease-out;
+    backdrop-filter: blur(5px);
+  }
+
+  .loading-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .loading-logo {
+    font-size: 2.5rem;
+    color: #DC143C;
+    text-shadow: 0 0 15px rgba(220, 20, 60, 0.7);
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 0.8; }
+    50% { opacity: 1; text-shadow: 0 0 20px rgba(220, 20, 60, 0.9); }
+    100% { opacity: 0.8; }
+  }
+
+  .loading-progress {
+    width: 80%;
+    max-width: 500px;
+    height: 8px;
+    background-color: rgba(26, 26, 26, 0.8);
+    border-radius: 4px;
+    margin: 2rem 0;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  .loading-progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #990000, #DC143C);
+    transition: width 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+    border-radius: 4px;
+  }
+
+  .loading-steps {
+    text-align: center;
+    margin-top: 1.5rem;
+    min-height: 120px;
+    width: 80%;
+    max-width: 500px;
+  }
+
+  .loading-step {
+    font-size: 1.1rem;
+    margin: 0.8rem 0;
+    color: #cccccc;
+    transition: all 0.4s ease;
+    position: relative;
+    padding-left: 30px;
+    text-align: left;
+  }
+
+  .loading-step::before {
+    content: "▹";
+    position: absolute;
+    left: 0;
+    color: #666;
+  }
+
+  .loading-step.active {
+    color: #FFD700;
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+    font-weight: 600;
+  }
+
+  .loading-step.active::before {
+    content: "▶";
+    color: #FFD700;
+    animation: blink 1s infinite;
+  }
+
+  .loading-step.completed {
+    color: #00AA00;
+  }
+
+  .loading-step.completed::before {
+    content: "✓";
+    color: #00AA00;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .loading-details {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    color: #999;
+    font-style: italic;
+    max-width: 500px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .loading-animation {
+    width: 60px;
+    height: 60px;
+    border: 3px solid rgba(220, 20, 60, 0.2);
+    border-top-color: #DC143C;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 15px rgba(220, 20, 60, 0.3);
+  }
+
+  .loading-time {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+    color: #666;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .loading-logo {
+      font-size: 1.8rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .loading-step {
+      font-size: 1rem;
+      padding-left: 25px;
+    }
+    
+    .loading-progress {
+      height: 6px;
+      margin: 1.5rem 0;
+    }
+  }
+</style>
+
+<!-- Loading Screen HTML -->
+<div id="loadingScreen" class="loading-overlay">
+  <div class="loading-animation"></div>
+  <div class="loading-logo">FINANCIAL ENGINE</div>
+  
+  <div class="loading-progress">
+    <div id="loadingProgressBar" class="loading-progress-bar"></div>
+  </div>
+  
+  <div class="loading-steps">
+    <div id="step1" class="loading-step">Initializing financial engine...</div>
+    <div id="step2" class="loading-step">Analyzing Daily book...</div>
+    <div id="step3" class="loading-step">Fetching other books...</div>
+    <div id="step4" class="loading-step">Finalizing documents...</div>
+    <div id="step5" class="loading-step">Creating .json file...</div>
+  </div>
+  
+  <div id="loadingDetails" class="loading-details">
+    Processing your financial data 
+  </div>
+  
+  <div id="loadingTime" class="loading-time">
+    Estimated time remaining: <span id="timeRemaining">15 seconds</span>
+  </div>
+</div>
+<script>
+// Enhanced Loading Screen Controller
+const loadingScreen = {
+  elements: {
+    screen: document.getElementById('loadingScreen'),
+    progressBar: document.getElementById('loadingProgressBar'),
+    steps: Array.from(document.querySelectorAll('.loading-step')),
+    details: document.getElementById('loadingDetails'),
+    timeRemaining: document.getElementById('timeRemaining')
+  },
+  
+  show: function() {
+    this.elements.screen.classList.add('active');
+    this.updateProgress(0);
+    this.resetSteps();
+  },
+  
+  hide: function() {
+    this.elements.screen.classList.remove('active');
+  },
+  
+  updateProgress: function(percentage) {
+    this.elements.progressBar.style.width = `${percentage}%`;
+    
+    // Update time estimate dynamically
+    const remaining = Math.max(0, Math.round((100 - percentage) / 10));
+    this.elements.timeRemaining.textContent = `${remaining} seconds`;
+  },
+  
+  setActiveStep: function(stepIndex) {
+    this.resetSteps();
+    if (stepIndex >= 0 && stepIndex < this.elements.steps.length) {
+      this.elements.steps[stepIndex].classList.add('active');
+      
+      // Update progress based on current step
+      const progress = (stepIndex / (this.elements.steps.length - 1)) * 100;
+      this.updateProgress(progress);
+    }
+  },
+  
+  completeStep: function(stepIndex) {
+    if (stepIndex >= 0 && stepIndex < this.elements.steps.length) {
+      this.elements.steps[stepIndex].classList.remove('active');
+      this.elements.steps[stepIndex].classList.add('completed');
+    }
+  },
+  
+  resetSteps: function() {
+    this.elements.steps.forEach(step => {
+      step.classList.remove('active', 'completed');
+    });
+  },
+  
+  setDetails: function(text) {
+    this.elements.details.textContent = text;
+  }
+};
+
+// Financial Statement Generation Handler
+document.getElementById('generateBtn').addEventListener('click', async function() {
+  const businessName = document.getElementById('businessName').value || 'Your Business';
+  const fy = document.getElementById('fy').value || '2024-2025';
+  
+  // Show loading screen with animation
+  loadingScreen.show();
+  
+  try {
+    // Simulate financial statement generation process
+    await simulateFinancialProcessing();
+    
+    // Create comprehensive financial data object
+    const financialData = {
+      businessName: businessName,
+      financialYear: fy,
+      dailyBook: entries.dailyBook,
+      losses: entries.losses,
+      loans: entries.loans,
+      assets: entries.assets,
+      inventory: entries.inventory,
+      taxSettings: entries.taxSettings,
+      generatedAt: new Date().toISOString()
+    };
+    
+    // Create JSON string
+    const jsonData = JSON.stringify(financialData, null, 2);
+    
+    // For debugging
+    console.log('Financial Statements:', financialData);
+    
+    // Hide loading screen when done
+    loadingScreen.hide();
+    
+    // Option to download as JSON file
+    const blob = new Blob([jsonData], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${businessName}_FinancialStatements_${fy}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert(`Financial statements for ${businessName} (${fy}) have been generated and downloaded as JSON!`);
+    
+  } catch (error) {
+    loadingScreen.setDetails(`Error: ${error.message}`);
+    setTimeout(loadingScreen.hide, 2000);
+  }
+});
+
+// Simulated financial processing with progress updates
+async function simulateFinancialProcessing() {
+  const steps = [
+    { text: "Validating input data...", duration: 800 },
+    { text: "Categorizing transactions...", duration: 1200 },
+    { text: "Calculating tax obligations...", duration: 1500 },
+    { text: "Generating visualizations...", duration: 1000 },
+    { text: "Compiling final reports...", duration: 800 }
+  ];
+  
+  for (let i = 0; i < steps.length; i++) {
+    loadingScreen.setActiveStep(i);
+    loadingScreen.setDetails(steps[i].text);
+    await new Promise(resolve => setTimeout(resolve, steps[i].duration));
+    loadingScreen.completeStep(i);
+  }
+  
+  loadingScreen.updateProgress(100);
+  loadingScreen.setDetails("Financial statements ready for download");
+}
+
+// CSV utility functions (keep these for other uses)
+function convertToCSV(data, fields) {
+  const headers = fields.join(',');
+  const rows = data.map(item => 
+    fields.map(field => 
+      `"${(item[field] || '').toString().replace(/"/g, '""')}"`
+    ).join(',')
+  );
+  return [headers, ...rows].join('\n');
+}
+
+function downloadCSV(csvData, filename) {
+  const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+// Profit Analysis System
+let profitChart = null; // Store chart instance globally
+
+function initProfitModal() {
+  // Set default dates (last 30 days)
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() - 30);
+  
+  document.getElementById('profitStartDate').valueAsDate = startDate;
+  document.getElementById('profitEndDate').valueAsDate = endDate;
+  
+  // Event listeners
+  document.getElementById('checkProfitsBtn').addEventListener('click', openProfitModal);
+  document.querySelector('.close-modal').addEventListener('click', closeProfitModal);
+  document.getElementById('calculateProfitBtn').addEventListener('click', calculateComprehensiveProfit);
+  
+  // Close modal when clicking outside
+  document.getElementById('profitModal').addEventListener('click', function(e) {
+    if (e.target === this) closeProfitModal();
+  });
+}
+
+function openProfitModal() {
+  document.getElementById('profitModal').style.display = 'flex';
+  document.querySelector('.results-container').classList.add('hidden');
+}
+
+function closeProfitModal() {
+  document.getElementById('profitModal').style.display = 'none';
+}
+
+function calculateComprehensiveProfit() {
+  try {
+    // Get date range
+    const startDate = new Date(document.getElementById('profitStartDate').value);
+    const endDate = new Date(document.getElementById('profitEndDate').value);
+    
+    // Validate dates
+    if (!startDate || !endDate) {
+      alert('Please select both start and end dates');
+      return;
+    }
+    if (startDate > endDate) {
+      alert('End date must be after start date');
+      return;
+    }
+    
+    // Get all necessary data
+    const dailyEntries = JSON.parse(localStorage.getItem('dailyBookEntries')) || [];
+    const taxSettings = JSON.parse(localStorage.getItem('taxSettings')) || {};
+    
+    if (dailyEntries.length === 0) {
+      alert('No entries found in your daily book');
+      return;
+    }
+    
+    // Initialize financial metrics
+    const financialData = {
+      grossIncome: 0,
+      taxableIncome: 0,
+      totalExpenses: 0,
+      deductibleExpenses: 0,
+      taxPaid: 0,
+      gstCollected: 0,
+      gstPaid: 0,
+      tdsDeducted: 0,
+      tdsCollected: 0,
+      dailyBreakdown: {}
+    };
+    
+    // Process each entry
+    dailyEntries.forEach(entry => {
+      if (!entry.date) return;
+      
+      const entryDate = new Date(entry.date);
+      if (entryDate < startDate || entryDate > endDate) return;
+      
+      const amount = parseFloat(entry.amount) || 0;
+      const dateKey = entry.date;
+      
+      // Initialize daily record if not exists
+      if (!financialData.dailyBreakdown[dateKey]) {
+        financialData.dailyBreakdown[dateKey] = {
+          date: entry.date,
+          income: 0,
+          expense: 0,
+          tax: 0,
+          profit: 0
+        };
+      }
+      
+      // Categorize the transaction
+      switch(entry.action) {
+        // Income categories
+        case 'received':
+        case 'sold':
+        case 'dividend received':
+        case 'interest received':
+        case 'investment income':
+          financialData.grossIncome += amount;
+          financialData.taxableIncome += amount;
+          financialData.dailyBreakdown[dateKey].income += amount;
+          financialData.dailyBreakdown[dateKey].profit += amount;
+          
+          // Check for GST on income
+          if (taxSettings.gstSlab && !['dividend received', 'interest received'].includes(entry.action)) {
+            const gstRate = parseFloat(taxSettings.gstSlab) / 100;
+            financialData.gstCollected += amount * gstRate;
+          }
+          break;
+          
+        // Expense categories
+        case 'paid':
+        case 'purchased':
+        case 'salary':
+        case 'rent':
+        case 'electricity':
+        case 'telephone':
+          financialData.totalExpenses += amount;
+          financialData.dailyBreakdown[dateKey].expense += amount;
+          financialData.dailyBreakdown[dateKey].profit -= amount;
+          
+          // Check for GST on expenses
+          if (taxSettings.gstSlab && taxSettings.itcEligibility === 'yes') {
+            const gstRate = parseFloat(taxSettings.gstSlab) / 100;
+            financialData.gstPaid += amount * gstRate;
+          }
+          break;
+          
+        // Tax payments
+        case 'deducted':
+        case 'GST payment':
+        case 'TDS payment':
+        case 'income tax advance':
+          financialData.taxPaid += amount;
+          financialData.totalExpenses += amount;
+          financialData.dailyBreakdown[dateKey].expense += amount;
+          financialData.dailyBreakdown[dateKey].profit -= amount;
+          
+          if (entry.action === 'TDS payment') {
+            financialData.tdsDeducted += amount;
+          }
+          break;
+          
+        // Capital/loan transactions (not included in profit calculation)
+        case 'borrowed':
+        case 'loan repayment':
+          // These don't affect profit directly
+          break;
+          
+        // Default case for other transactions
+        default:
+          // Assume expense if not specified
+          financialData.totalExpenses += amount;
+          financialData.dailyBreakdown[dateKey].expense += amount;
+          financialData.dailyBreakdown[dateKey].profit -= amount;
+      }
+    });
+    
+    // Calculate final metrics
+    const netProfit = financialData.grossIncome - financialData.totalExpenses;
+    
+    // Update UI with results
+    updateProfitResults(financialData, netProfit, startDate, endDate);
+    
+    // Show results container
+    document.querySelector('.results-container').classList.remove('hidden');
+    
+  } catch (error) {
+    console.error('Profit calculation error:', error);
+    alert(`Error calculating profit: ${error.message}`);
+  }
+}
+
+function updateProfitResults(data, netProfit, startDate, endDate) {
+  // Format currency
+  const format = (amount) => '₹' + Math.abs(amount).toFixed(2);
+  
+  // Update summary cards
+  document.getElementById('totalIncome').textContent = format(data.grossIncome);
+  document.getElementById('totalExpense').textContent = format(data.totalExpenses);
+  document.getElementById('totalTax').textContent = format(data.taxPaid);
+  document.getElementById('netProfit').textContent = format(netProfit);
+  
+  // Update tax breakdown
+  document.getElementById('gstCollected').textContent = format(data.gstCollected);
+  document.getElementById('gstPaid').textContent = format(data.gstPaid);
+  document.getElementById('tdsDeducted').textContent = format(data.tdsDeducted);
+  document.getElementById('tdsCollected').textContent = format(data.tdsCollected);
+  
+  // Find best/worst days
+  let bestDay = { date: '', profit: -Infinity };
+  let worstDay = { date: '', profit: Infinity };
+  
+  Object.values(data.dailyBreakdown).forEach(day => {
+    if (day.profit > bestDay.profit) bestDay = day;
+    if (day.profit < worstDay.profit) worstDay = day;
+  });
+  
+  // Format dates
+  const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString('en-IN');
+  
+  // Update best/worst days
+  document.getElementById('bestDayText').textContent = 
+    bestDay.date ? `${formatDate(bestDay.date)}: ${format(bestDay.profit)}` : '-';
+  document.getElementById('worstDayText').textContent = 
+    worstDay.date ? `${formatDate(worstDay.date)}: ${format(worstDay.profit)}` : '-';
+  
+  // Create chart
+  createProfitChart(data.dailyBreakdown, startDate, endDate);
+}
+
+function createProfitChart(dailyData, startDate, endDate) {
+  const ctx = document.getElementById('profitChart').getContext('2d');
+  
+  // Prepare chart data
+  const dates = Object.keys(dailyData).sort();
+  const labels = dates.map(date => new Date(date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }));
+  const incomeData = dates.map(date => dailyData[date].income);
+  const expenseData = dates.map(date => dailyData[date].expense);
+  const profitData = dates.map(date => dailyData[date].profit);
+  
+  // Destroy previous chart if exists
+  if (profitChart) {
+    profitChart.destroy();
+  }
+  
+  // Create new chart
+  profitChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Income',
+          data: incomeData,
+          backgroundColor: 'rgba(0, 170, 0, 0.7)',
+          borderColor: 'rgba(0, 170, 0, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Expenses',
+          data: expenseData,
+          backgroundColor: 'rgba(255, 68, 68, 0.7)',
+          borderColor: 'rgba(255, 68, 68, 1)',
+          borderWidth: 1
+        },
+        {
+          label: 'Profit',
+          data: profitData,
+          type: 'line',
+          borderColor: 'rgba(255, 215, 0, 1)',
+          borderWidth: 3,
+          pointBackgroundColor: 'rgba(255, 215, 0, 1)',
+          pointRadius: 5,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          display: true,
+          text: `Profit Analysis (${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()})`,
+          color: '#FFD700',
+          font: {
+            size: 16,
+            family: "'Orbitron', sans-serif"
+          }
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              let label = context.dataset.label || '';
+              if (label) label += ': ';
+              if (context.parsed.y !== null) {
+                label += '₹' + context.parsed.y.toFixed(2);
+              }
+              return label;
+            }
+          }
+        },
+        legend: {
+          labels: {
+            color: '#eeeeee',
+            font: {
+              family: "'Rajdhani', sans-serif"
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: {
+            display: false,
+            color: 'rgba(255, 255, 255, 0.1)'
+          },
+          ticks: {
+            color: '#cccccc',
+            font: {
+              family: "'Rajdhani', sans-serif"
+            }
+          }
+        },
+        y: {
+          beginAtZero: false,
+          grid: {
+            color: 'rgba(255, 255, 255, 0.1)'
+          },
+          ticks: {
+            color: '#cccccc',
+            font: {
+              family: "'Rajdhani', sans-serif"
+            },
+            callback: function(value) {
+              return '₹' + value;
+            }
+          }
+        }
+      }
+    }
+  });
+}
+
+// Initialize the profit modal when DOM is loaded
+document.addEventListener('DOMContentLoaded', initProfitModal);
+function setupEventListeners() {
+  document.getElementById('saveEntry').addEventListener('click', saveAllEntries);
+  
+  // Set up TDS section change listener
+  document.getElementById('tdsSection').addEventListener('change', function() {
+    const section = this.value;
+    document.getElementById('tdsRate').value = tdsRates[section] || '';
+  });
+  
+  // Save tax settings when they change
+  document.querySelectorAll('#taxSettings input, #taxSettings select').forEach(el => {
+    el.addEventListener('change', saveTaxSettings);
+  });
+}
+    </script>
+	</body> 
+	</html>
