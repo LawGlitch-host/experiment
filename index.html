@@ -270,14 +270,7 @@
             overflow: hidden;
         }
 
-        #particle-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-        }
+       
 
         .hero-content {
             text-align: center;
@@ -839,6 +832,144 @@
     min-height: 250px;
   }
 }
+@media (max-width: 600px) {
+  .container {
+    flex-direction: column;
+  }
+}
+/* Digital Awakening Rift Scene */
+.rift-scene {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100vh;
+    transform: translate(-50%, -50%) perspective(1000px);
+    transform-style: preserve-3d;
+    opacity: 0;
+    transition: opacity 1.5s ease-out;
+    pointer-events: none;
+    z-index: 5;
+    overflow: hidden;
+}
+
+.rift-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+}
+
+.rift-orb {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, 
+        rgba(255,255,255,1) 0%, 
+        rgba(220,20,60,1) 30%, 
+        rgba(0,0,0,0) 70%);
+    transform: translate(-50%, -50%) translateZ(0);
+    filter: blur(10px);
+    animation: riftPulse 4s infinite alternate, riftFloat 8s infinite ease-in-out;
+    box-shadow: 0 0 60px rgba(220,20,60,0.8),
+                0 0 120px rgba(220,20,60,0.5),
+                inset 0 0 20px rgba(255,255,255,0.8);
+}
+
+.rift-grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 200%;
+    background-image: 
+        repeating-linear-gradient(0deg, 
+            rgba(220,20,60,0.1) 0px, 
+            rgba(220,20,60,0.1) 1px, 
+            transparent 1px, 
+            transparent 50px),
+        repeating-linear-gradient(90deg, 
+            rgba(220,20,60,0.1) 0px, 
+            rgba(220,20,60,0.1) 1px, 
+            transparent 1px, 
+            transparent 50px);
+    transform: translateZ(-500px) rotateX(75deg);
+    animation: riftGridMove 20s linear infinite;
+}
+
+.rift-shard {
+    position: absolute;
+    color: white;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 24px;
+    text-shadow: 0 0 10px var(--crimson);
+    opacity: 0.8;
+    transform-style: preserve-3d;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+}
+
+.rift-tagline {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) translateZ(100px);
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: white;
+    text-align: center;
+    text-shadow: var(--text-glow);
+    opacity: 0;
+    width: 80%;
+    line-height: 1.3;
+    animation: riftTaglineIn 2s 1s forwards;
+}
+
+@keyframes riftPulse {
+    0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.8; }
+    100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+
+@keyframes riftFloat {
+    0%, 100% { transform: translate(-50%, -50%) translateY(0) rotateZ(0deg); }
+    25% { transform: translate(-50%, -50%) translateY(-20px) rotateZ(2deg); }
+    50% { transform: translate(-50%, -50%) translateY(0) rotateZ(0deg); }
+    75% { transform: translate(-50%, -50%) translateY(20px) rotateZ(-2deg); }
+}
+
+@keyframes riftGridMove {
+    0% { transform: translateZ(-500px) rotateX(75deg) translateY(0) translateX(0); }
+    100% { transform: translateZ(-500px) rotateX(75deg) translateY(-50px) translateX(-50px); }
+}
+
+@keyframes riftTaglineIn {
+    0% { opacity: 0; transform: translate(-50%, -50%) translateZ(100px) scale(0.8); }
+    100% { opacity: 1; transform: translate(-50%, -50%) translateZ(100px) scale(1); }
+}
+
+@media (max-width: 768px) {
+    .rift-tagline {
+        font-size: 1.8rem;
+    }
+    .rift-orb {
+        width: 150px;
+        height: 150px;
+    }
+}
+
+@media (max-width: 480px) {
+    .rift-tagline {
+        font-size: 1.4rem;
+    }
+    .rift-orb {
+        width: 100px;
+        height: 100px;
+    }
+}
     </style>
 </head>
 <body>
@@ -1120,152 +1251,8 @@ Want to stay safe? Our store offers everything from self-defense gear to hidden 
             setTimeout(() => {
                 typeText(heroText, heroText.textContent);
             }, 1000);
-            // Three.js setup
-            const canvas = document.getElementById('particle-canvas');
-            const scene = new THREE.Scene();
-            scene.fog = new THREE.FogExp2(0x000000, 0.01);
-
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ 
-                antialias: true,
-                alpha: true,
-                powerPreference: "high-performance"
-            });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setClearColor(0x000000, 0);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            canvas.appendChild(renderer.domElement);
-
-            camera.position.z = 15;
-            camera.position.y = 5;
-
-            // Create particle sphere
-            const particleCount = 15000;
-            const particles = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const colors = new Float32Array(particleCount * 3);
-            const sizes = new Float32Array(particleCount);
-            
-            for(let i = 0; i < particleCount; i++) {
-                const phi = Math.acos(-1 + (2 * i) / particleCount);
-                const theta = Math.sqrt(particleCount * Math.PI) * phi;
-                
-                positions[i * 3] = 5 * Math.sin(phi) * Math.cos(theta);
-                positions[i * 3 + 1] = 5 * Math.sin(phi) * Math.sin(theta);
-                positions[i * 3 + 2] = 5 * Math.cos(phi);
-                
-                colors[i * 3] = 0.8 + Math.random() * 0.2;
-                colors[i * 3 + 1] = 0.1 + Math.random() * 0.1;
-                colors[i * 3 + 2] = 0.1 + Math.random() * 0.1;
-                
-                sizes[i] = 0.1 + Math.random() * 0.1;
-            }
-            
-            particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            particles.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-            particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-            
-            const particleMaterial = new THREE.PointsMaterial({
-                size: 0.15,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.8,
-                blending: THREE.AdditiveBlending
-            });
-            
-            const particleSystem = new THREE.Points(particles, particleMaterial);
-            scene.add(particleSystem);
-            
-            // Create orbit rings
-            const ringGeometry = new THREE.BufferGeometry();
-            const ringParticles = 3000;
-            const ringPositions = new Float32Array(ringParticles * 3);
-            const ringColors = new Float32Array(ringParticles * 3);
-            const ringSizes = new Float32Array(ringParticles);
-            
-            for(let i = 0; i < ringParticles; i++) {
-                const angle = (i / ringParticles) * Math.PI * 2;
-                const radius = 6 + (Math.random() - 0.5) * 0.4;
-                
-                ringPositions[i * 3] = Math.cos(angle) * radius;
-                ringPositions[i * 3 + 1] = (Math.random() - 0.5) * 0.4;
-                ringPositions[i * 3 + 2] = Math.sin(angle) * radius;
-                
-                ringColors[i * 3] = 1.0;
-                ringColors[i * 3 + 1] = 0.2 + Math.random() * 0.1;
-                ringColors[i * 3 + 2] = 0.2 + Math.random() * 0.1;
-                
-                ringSizes[i] = 0.1 + Math.random() * 0.1;
-            }
-            
-            ringGeometry.setAttribute('position', new THREE.BufferAttribute(ringPositions, 3));
-            ringGeometry.setAttribute('color', new THREE.BufferAttribute(ringColors, 3));
-            ringGeometry.setAttribute('size', new THREE.BufferAttribute(ringSizes, 1));
-            
-            const ringMaterial = new THREE.PointsMaterial({
-                size: 0.12,
-                vertexColors: true,
-                transparent: true,
-                opacity: 0.7,
-                blending: THREE.AdditiveBlending
-            });
-            
-            const rings = [];
-            for(let i = 0; i < 6; i++) {
-                const ring = new THREE.Points(ringGeometry, ringMaterial);
-                ring.rotation.x = Math.random() * Math.PI;
-                ring.rotation.y = Math.random() * Math.PI;
-                scene.add(ring);
-                rings.push(ring);
-            }
-            
-            // Animation loop
-            let time = 0;
-            function animate() {
-                requestAnimationFrame(animate);
-                time += 0.002;
-                
-                // Rotate particles
-                particleSystem.rotation.y += 0.001;
-                particleSystem.rotation.x = Math.sin(time * 0.5) * 0.15;
-                
-                // Pulse effect
-                const breathe = 1 + Math.sin(time * 1.5) * 0.1;
-                particleSystem.scale.set(breathe, breathe, breathe);
-                
-                // Rotate rings
-                rings.forEach((ring, i) => {
-                    const dynamicSpeed = 0.001 * (Math.sin(time * 0.2) + 2.0) * (i + 1);
-                    ring.rotation.z += dynamicSpeed;
-                    ring.rotation.x += dynamicSpeed * 0.6;
-                    ring.rotation.y += dynamicSpeed * 0.4;
-                });
-                
-                renderer.render(scene, camera);
-            }
-            
-            animate();
-            
-            // Handle resize
-            window.addEventListener('resize', function() {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-            
-            // Mouse movement effect
-            document.addEventListener('mousemove', function(e) {
-                const mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-                const mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
-                
-                particleSystem.rotation.x += (mouseY * 0.2 - particleSystem.rotation.x) * 0.05;
-                particleSystem.rotation.y += (mouseX * 0.2 - particleSystem.rotation.y) * 0.05;
-                
-                const distanceX = (mouseX * 1.5);
-                const distanceY = (mouseY * 1.5);
-                particleSystem.position.x += (distanceX - particleSystem.position.x) * 0.05;
-                particleSystem.position.y += (distanceY - particleSystem.position.y) * 0.05;
-            });
+          
+     
 
             // SECTION: Custom Cursor
             const cursor = document.querySelector('.cursor');
@@ -1594,7 +1581,7 @@ Want to stay safe? Our store offers everything from self-defense gear to hidden 
                 }
             });
 
-            // GET STARTED LINK
+              // GET STARTED LINK
             document.getElementById('getStartedLink').addEventListener('click', () => {
                 window.location.href = 'Project-LawGlitch/login%20page.html';
             });
@@ -1602,29 +1589,114 @@ Want to stay safe? Our store offers everything from self-defense gear to hidden 
 		// Replace service images with iframes
 document.addEventListener('DOMContentLoaded', () => {
   const serviceImages = document.querySelectorAll('.service-image');
-
+  
   serviceImages.forEach(container => {
     const img = container.querySelector('img');
-    const dataSrc = img?.getAttribute('data-src');
-
-    if (!dataSrc) return;
-
-    // Clean up the path and add .html
-    const cleanPath = dataSrc.trim().replace(/\s+/g, '-').concat('.html');
-
+    if (!img || !img.alt) return;
+    
+    const filename = img.alt
+      .toLowerCase()
+      .replace(/\s+/g,)
+      .concat('.html');
+      
     const iframe = document.createElement('iframe');
     Object.assign(iframe, {
-      src: cleanPath,
+      src: filename,
       width: '100%',
       height: '400',
       loading: 'lazy'
     });
-
-    iframe.style.cssText = 'border: none; border-radius: 5px; min-height: 400px;';
+    
+    iframe.style.cssText = 'border: none; border-radius: 5px; min-height: 400px;'; // Added min-height
     container.innerHTML = '';
     container.appendChild(iframe);
   });
-})
+});
+// Create Digital Awakening Rift Scene
+function createRiftScene() {
+    const riftScene = document.createElement('div');
+    riftScene.className = 'rift-scene';
+    
+    const riftContainer = document.createElement('div');
+    riftContainer.className = 'rift-container';
+    
+    const riftOrb = document.createElement('div');
+    riftOrb.className = 'rift-orb';
+    
+    const riftGrid = document.createElement('div');
+    riftGrid.className = 'rift-grid';
+    
+    const riftTagline = document.createElement('div');
+    riftTagline.className = 'rift-tagline';
+    riftTagline.textContent = "They Wrote The Rules. We Turned Them into Weapons.";
+    
+    // Create shards with law/code fragments
+    const shardTexts = ['§404', '<LAW>', 'void', 'NULL', '0xDEAD', 'JUSTICE?', 'TAX!', 'RIGHTS'];
+    for (let i = 0; i < 8; i++) {
+        const shard = document.createElement('div');
+        shard.className = 'rift-shard';
+        shard.textContent = shardTexts[i];
+        
+        // Random initial position and animation
+        const startX = Math.random() * 100 - 50;
+        const startY = Math.random() * 100 - 50;
+        const startZ = Math.random() * 500 - 100;
+        const rotateX = Math.random() * 360;
+        const rotateY = Math.random() * 360;
+        const duration = 10 + Math.random() * 20;
+        const delay = Math.random() * 5;
+        
+        shard.style.transform = `translate3d(${startX}vw, ${startY}vh, ${startZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        shard.style.animation = `riftShardMove ${duration}s ${delay}s infinite`;
+        
+        // Create keyframes for this shard
+        const keyframes = `
+            @keyframes riftShardMove {
+                0% { transform: translate3d(${startX}vw, ${startY}vh, ${startZ}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg); opacity: 0.8; }
+                50% { transform: translate3d(${startX * 1.5}vw, ${startY * 1.5}vh, ${startZ + 800}px) rotateX(${rotateX + 180}deg) rotateY(${rotateY + 180}deg); opacity: 0; }
+                100% { transform: translate3d(${startX}vw, ${startY}vh, ${startZ}px) rotateX(${rotateX + 360}deg) rotateY(${rotateY + 360}deg); opacity: 0.8; }
+            }
+        `;
+        
+        const style = document.createElement('style');
+        style.innerHTML = keyframes;
+        document.head.appendChild(style);
+        
+        riftContainer.appendChild(shard);
+    }
+    
+    riftContainer.appendChild(riftOrb);
+    riftContainer.appendChild(riftGrid);
+    riftContainer.appendChild(riftTagline);
+    riftScene.appendChild(riftContainer);
+    
+    // Add to hero section
+    const hero = document.querySelector('.hero');
+    hero.appendChild(riftScene);
+    
+    // Show rift when scrolled into view
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                riftScene.style.opacity = '1';
+                
+                // Add mouse move effect
+                document.addEventListener('mousemove', (e) => {
+                    const x = (e.clientX / window.innerWidth - 0.5) * 20;
+                    const y = (e.clientY / window.innerHeight - 0.5) * 20;
+                    riftContainer.style.transform = `rotateY(${-x}deg) rotateX(${y}deg)`;
+                });
+            } else {
+                riftScene.style.opacity = '0';
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    observer.observe(riftScene);
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', createRiftScene);
     </script>
 </body>
 </html>
