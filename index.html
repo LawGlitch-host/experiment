@@ -1586,28 +1586,35 @@ Want to stay safe? Our store offers everything from self-defense gear to hidden 
                 window.location.href = 'Project-LawGlitch/login%20page.html';
             });
         });
-		// Replace service images with iframes
+// Corrected iframe loading script (uses existing data-src paths)
 document.addEventListener('DOMContentLoaded', () => {
   const serviceImages = document.querySelectorAll('.service-image');
   
   serviceImages.forEach(container => {
     const img = container.querySelector('img');
-    if (!img || !img.alt) return;
+    if (!img || !img.dataset.src) return;
     
-    const filename = img.alt
-      .toLowerCase()
-      .replace(/\s+/g,)
-      .concat('.html');
-      
+    // Just add .html to the existing path
+    const fullPath = img.dataset.src + '.html';
+    
     const iframe = document.createElement('iframe');
-    Object.assign(iframe, {
-      src: filename,
-      width: '100%',
-      height: '400',
-      loading: 'lazy'
-    });
+    iframe.src = fullPath;
+    iframe.style.width = '100%';
+    iframe.style.height = '400px';
+    iframe.style.border = 'none';
+    iframe.style.borderRadius = '5px';
+    iframe.style.minHeight = '400px';
     
-    iframe.style.cssText = 'border: none; border-radius: 5px; min-height: 400px;'; // Added min-height
+    // Error handling
+    iframe.onerror = function() {
+      console.log('Iframe failed to load:', this.src);
+      this.style.backgroundColor = 'var(--dark-gray)';
+      this.style.display = 'flex';
+      this.style.justifyContent = 'center';
+      this.style.alignItems = 'center';
+      this.innerHTML = '<p>Preview unavailable</p>';
+    };
+    
     container.innerHTML = '';
     container.appendChild(iframe);
   });
