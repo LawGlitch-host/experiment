@@ -166,6 +166,294 @@
             left: 50%;
             transform: translateX(-50%);
         }
+        @media (max-width: 768px) {
+    /* Global Reset */
+    * {
+        box-sizing: border-box;
+        max-width: 100%;
+    }
+    
+    body, html {
+        overflow-x: hidden;
+        width: 100%;
+    }
+    
+    /* Header Reconstruction */
+    header {
+        flex-direction: column;
+        padding: 0.8rem;
+    }
+    
+    header h1 {
+        font-size: 1.3rem;
+        margin-bottom: 0.5rem;
+        text-align: center;
+        width: 100%;
+    }
+    
+    nav ul {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.3rem;
+        padding: 0;
+    }
+    
+    .nav-item {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 0.6rem;
+    }
+    
+    /* Card & Section Overhaul */
+    .card-matrix {
+        padding: 0.8rem;
+        margin: 0.5rem 0;
+    }
+    
+    .section-content {
+        padding: 0;
+    }
+    
+    /* Form Elements Reconstruction */
+    .input-group, .mb-4 {
+        margin-bottom: 0.6rem;
+        width: 100%;
+    }
+    
+    input, select, textarea {
+        width: 100% !important;
+        padding: 0.7rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Button Reconstruction */
+    .btn-matrix {
+        min-height: 44px;
+        width: 100%;
+        margin: 0.3rem 0;
+        padding: 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Table Complete Overhaul */
+    table {
+        display: block;
+        width: 100% !important;
+        overflow: hidden;
+    }
+    
+    thead, tbody, tr, th, td {
+        display: block;
+        width: 100% !important;
+    }
+    
+    tr {
+        margin-bottom: 0.8rem;
+        border: 1px solid #333;
+        border-radius: 4px;
+    }
+    
+    th {
+        display: none;
+    }
+    
+    td {
+        padding: 0.5rem;
+        border: none !important;
+        position: relative;
+        padding-left: 40% !important;
+    }
+    
+    td:before {
+        content: attr(data-label);
+        position: absolute;
+        left: 0.5rem;
+        width: 35%;
+        padding-right: 0.5rem;
+        font-weight: bold;
+        color: #ff0;
+    }
+    
+    /* Employee Tracker Specific */
+    #employeeTable td {
+        padding-left: 30% !important;
+    }
+    
+    /* Modal Reconstruction */
+    .modal-content {
+        width: 95vw;
+        padding: 0.8rem;
+        margin: 0.5rem;
+    }
+    
+    /* Roadmap Complete Rebuild */
+    #milestonesList {
+        grid-template-columns: 1fr !important;
+        gap: 1rem;
+    }
+    
+    .timeline-connector::after {
+        display: none;
+    }
+    
+    .milestone-dot {
+        position: relative;
+        top: 0;
+        left: 0;
+        transform: none;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Inventory Tracker Reconstruction */
+    #inventoryTable td {
+        white-space: normal;
+        padding-left: 40% !important;
+    }
+    
+    /* Footer Adjustment */
+    footer {
+        padding: 0.8rem;
+        font-size: 0.7rem;
+    }
+    
+    /* Utility Classes */
+    .hidden-mobile {
+        display: none !important;
+    }
+    
+    .full-width-mobile {
+        width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+    
+    /* Form Layouts */
+    .grid-cols-2, .grid-cols-3, .grid-cols-4 {
+        grid-template-columns: 1fr !important;
+        gap: 0.6rem;
+    }
+    
+    /* Search Boxes */
+    .flex.items-center {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .flex.items-center input {
+        border-radius: 4px !important;
+        margin-bottom: 0.3rem;
+    }
+    
+    .flex.items-center button {
+        width: 100%;
+        border-radius: 4px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Ultra-Compact Mobile Styles */
+    td {
+        padding-left: 45% !important;
+        font-size: 0.8rem;
+    }
+    
+    td:before {
+        width: 40%;
+        font-size: 0.7rem;
+    }
+    
+    .btn-matrix {
+        padding: 0.7rem;
+        font-size: 0.8rem;
+    }
+    
+    .card-matrix {
+        padding: 0.6rem;
+    }
+    
+    /* Form Elements */
+    input, select, textarea {
+        padding: 0.6rem;
+        font-size: 0.8rem;
+    }
+    
+    /* Inventory Tracker */
+    #inventoryTable td {
+        padding-left: 50% !important;
+    }
+}
+
+/* Dynamic Table Headers */
+@media (max-width: 768px) {
+    #employeeTable td:nth-child(1):before { content: "Name"; }
+    #employeeTable td:nth-child(2):before { content: "Role"; }
+    #employeeTable td:nth-child(3):before { content: "Rate"; }
+    #employeeTable td:nth-child(4):before { content: "Tasks"; }
+    #employeeTable td:nth-child(5):before { content: "Actions"; }
+    
+    #taskTable td:nth-child(1):before { content: "Task"; }
+    #taskTable td:nth-child(2):before { content: "Assigned To"; }
+    #taskTable td:nth-child(3):before { content: "Due Date"; }
+    #taskTable td:nth-child(4):before { content: "Priority"; }
+    #taskTable td:nth-child(5):before { content: "Status"; }
+    #taskTable td:nth-child(6):before { content: "Actions"; }
+    
+    #clientTable td:nth-child(1):before { content: "Name"; }
+    #clientTable td:nth-child(2):before { content: "Contact"; }
+    #clientTable td:nth-child(3):before { content: "Status"; }
+    #clientTable td:nth-child(4):before { content: "Actions"; }
+    
+    #inventoryTable td:nth-child(1):before { content: "Item"; }
+    #inventoryTable td:nth-child(2):before { content: "Category"; }
+    #inventoryTable td:nth-child(3):before { content: "Qty"; }
+    #inventoryTable td:nth-child(4):before { content: "Price"; }
+    #inventoryTable td:nth-child(5):before { content: "Value"; }
+    #inventoryTable td:nth-child(6):before { content: "Supplier"; }
+    #inventoryTable td:nth-child(7):before { content: "Actions"; }
+}
+
+/* Button Groups */
+@media (max-width: 768px) {
+    .flex.justify-between.items-center {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .flex.justify-between.items-center > * {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .flex.space-x-2 {
+        flex-direction: column;
+        gap: 0.3rem;
+    }
+}
+
+/* Fullscreen Roadmap Button */
+@media (max-width: 768px) {
+    #roadmap .flex.justify-between.items-center {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    #roadmap .flex.justify-between.items-center > * {
+        width: 100%;
+    }
+}
+
+/* Disable Glitch Effects on Mobile */
+@media (max-width: 768px) {
+    .glitch-effect::before, 
+    .glitch-effect::after {
+        display: none;
+    }
+    
+    .matrix-bg {
+        opacity: 0.03;
+    }
+}
     </style>
 </head>
 <body>
