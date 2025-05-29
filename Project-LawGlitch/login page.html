@@ -576,29 +576,133 @@
                 font-size: 12px;
             }
         }
+        @media (max-width: 768px) {
+ /* Footer Contact/Bug Report - Fixed positioning */
+    .footer-left, 
+    .footer-center {
+        position: fixed !important;
+        width: auto !important;
+        text-align: center !important;
+        transform: none !important;
+        padding: 0 !important;
+        background-color: transparent !important;
+        border-radius: 0 !important;
+        backdrop-filter: none !important;
+        border: none !important;
+    }
+    
+    .footer-left {
+        bottom: 15px !important;
+        left: 15px !important;
+        right: auto !important;
+        max-width: none !important;
+        transform: none !important;
+    }
+    
+    .footer-center {
+        bottom: 15px !important;
+        left: 60% !important;
+        right: auto !important;
+        transform: translateX(-50%) !important;
+        white-space: nowrap;
+        max-width: none !important;
+        font-size: 11px !important;
+    }
+    
+    /* Ensure bug report text is smaller on mobile */
+    .bug-text {
+        font-size: 11px !important;
+    }
+    
+    /* Adjust button stack to avoid overlap */
+    .button-stack {
+        margin-bottom: 80px !important;
+    }
+}
+
+/* Additional fix for very small screens */
+@media (max-width: 480px) {
+    .footer-left {
+        bottom: 10px !important;
+        left: 10px !important;
+        transform: none !important;
+        font-size: 10px !important;
+    }
+    
+    .footer-center {
+        bottom: 10px !important;
+        left: 60% !important;
+        transform: translateX(-50%) !important;
+        font-size: 10px !important;
+    }
+    
+    .bug-icon {
+        font-size: 14px !important;
+    }
+    
+    .bug-text {
+        font-size: 10px !important;
+    }
+}
+.spark {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, rgba(255,50,50,0.9) 20%, rgba(255,0,0,0.3) 70%, transparent 90%);
+    border-radius: 50%;
+    box-shadow: 
+        0 0 5px 1px rgba(255, 0, 0, 0.7),
+        0 0 15px 2px rgba(255, 50, 50, 0.5);
+    top: -10px;
+    left: var(--spark-left);
+    animation: 
+        sparkFall var(--spark-duration, 10s) linear infinite,
+        sparkPulse 2s ease-in-out infinite alternate;
+    animation-delay: var(--spark-delay);
+    opacity: 0;
+    will-change: transform, opacity;
+    filter: blur(0.5px);
+}
+
+/* Add these new animations */
+@keyframes sparkPulse {
+    0% { opacity: var(--spark-opacity, 0.6); }
+    100% { opacity: calc(var(--spark-opacity, 0.6) * 1.3); }
+}
+
+@keyframes sparkFall {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+    }
+    10% {
+        opacity: var(--spark-opacity, 0.6);
+    }
+    90% {
+        opacity: var(--spark-opacity, 0.6);
+    }
+    100% {
+        transform: translateY(100vh) translateX(calc(var(--spark-drift, 0) * 100px)) rotate(360deg) scale(1.2);
+        opacity: 0;
+    }
+}
     </style>
 </head>
 <body>
     <!-- Background Elements -->   
-    <div class="background-container">
-        <div class="background-image"></div>
-        <div class="dark-overlay"></div>
-        <div class="red-mist"></div>
-        <div class="fog-layer fog-1"></div>
-        <div class="fog-layer fog-2"></div>
-        <div class="spark" style="--spark-left: 15%; --spark-delay: 0s;"></div>
-        <div class="spark" style="--spark-left: 30%; --spark-delay: 1s;"></div>
-        <div class="spark" style="--spark-left: 75%; --spark-delay: 2s;"></div>
-        <div class="spark" style="--spark-left: 90%; --spark-delay: 3s;"></div>
-        <div class="spark" style="--spark-left: 20%; --spark-delay: 0s;"></div>
-        <div class="spark" style="--spark-left: 40%; --spark-delay: 1s;"></div>
-        <div class="spark" style="--spark-left: 80%; --spark-delay: 2s;"></div>
-        <div class="spark" style="--spark-left: 35%; --spark-delay: 3s;"></div>
-        <div class="spark" style="--spark-left: 45%; --spark-delay: 0s;"></div>
-        <div class="spark" style="--spark-left: 70%; --spark-delay: 1s;"></div>
-        <div class="spark" style="--spark-left: 75%; --spark-delay: 2s;"></div>
-        <div class="spark" style="--spark-left: 20%; --spark-delay: 3s;"></div>
-    </div>
+  <div class="spark" style="--spark-left: 5%; --spark-delay: 0s; --spark-duration: 12s; --spark-drift: 0.5; --spark-opacity: 0.7;"></div>
+<div class="spark" style="--spark-left: 15%; --spark-delay: 1.5s; --spark-duration: 14s; --spark-drift: -0.3; --spark-opacity: 0.8; width: 5px; height: 5px;"></div>
+<div class="spark" style="--spark-left: 25%; --spark-delay: 3s; --spark-duration: 11s; --spark-drift: 0.2; --spark-opacity: 0.9;"></div>
+<div class="spark" style="--spark-left: 35%; --spark-delay: 0.5s; --spark-duration: 16s; --spark-drift: -0.7; --spark-opacity: 0.6; width: 3px; height: 3px;"></div>
+<div class="spark" style="--spark-left: 45%; --spark-delay: 2s; --spark-duration: 13s; --spark-drift: 0.4; --spark-opacity: 0.8;"></div>
+<div class="spark" style="--spark-left: 55%; --spark-delay: 4s; --spark-duration: 15s; --spark-drift: -0.5; --spark-opacity: 0.9; width: 5px; height: 5px;"></div>
+<div class="spark" style="--spark-left: 65%; --spark-delay: 1s; --spark-duration: 12s; --spark-drift: 0.3; --spark-opacity: 0.6;"></div>
+<div class="spark" style="--spark-left: 75%; --spark-delay: 2.5s; --spark-duration: 14s; --spark-drift: -0.2; --spark-opacity: 0.7; width: 6px; height: 6px;"></div>
+<div class="spark" style="--spark-left: 85%; --spark-delay: 0.8s; --spark-duration: 11s; --spark-drift: 0.6; --spark-opacity: 0.8;"></div>
+<div class="spark" style="--spark-left: 95%; --spark-delay: 3.5s; --spark-duration: 13s; --spark-drift: -0.4; --spark-opacity: 0.9; width: 4px; height: 4px;"></div>
+<div class="spark" style="--spark-left: 30%; --spark-delay: 1.2s; --spark-duration: 15s; --spark-drift: 0.1; --spark-opacity: 0.7;"></div>
+<div class="spark" style="--spark-left: 70%; --spark-delay: 2.8s; --spark-duration: 12s; --spark-drift: -0.8; --spark-opacity: 0.8; width: 5px; height: 5px;"></div>
+</div>
 
     <!-- Step-by-Step Form -->
     <div class="login-container" id="loginContainer">
