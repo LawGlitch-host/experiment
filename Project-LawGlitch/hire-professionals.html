@@ -1071,7 +1071,210 @@
 .no-underline::after {
     display: none !important;
 }
+/* Mobile Responsive Fixes */
+@media (max-width: 768px) {
+    /* General mobile adjustments */
+    body {
+        padding-bottom: 100px; /* Extra space for mobile nav */
+    }
+    
+    .container {
+        padding: 15px;
+    }
+    
+    /* Form adjustments */
+    .form-container {
+        padding: 20px 15px;
+    }
+    
+    .options {
+        flex-direction: column;
+    }
+    
+    .option-btn {
+        width: 100%;
+    }
+    
+    /* Professional cards adjustments */
+    .professional-card {
+        min-width: 85vw;
+        margin: 0 10px;
+    }
+    
+    .professional-img {
+        height: 150px;
+    }
+    
+    /* WhatsApp button specific fixes */
+    .professional-chat {
+        position: relative;
+        z-index: 10;
+        margin-top: 15px;
+    }
+    
+    .whatsapp-btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    /* Carousel adjustments */
+    .carousel-btn {
+        width: 30px;
+        height: 30px;
+        font-size: 0.8rem;
+    }
+    
+    /* Result container adjustments */
+    #result-container {
+        padding: 20px 15px;
+    }
+    
+    /* Mobile nav adjustments */
+    .mobile-nav {
+        height: 70px;
+    }
+    
+    .mobile-nav-btn {
+        font-size: 0.9rem;
+        padding: 10px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    /* Smart match section adjustments */
+    #smart-match {
+        margin-top: 30px;
+    }
+    
+    /* Button spacing adjustments */
+    .btn, button {
+        margin-bottom: 10px;
+    }
+    
+    /* Hide desktop elements */
+    .desktop-nav {
+        display: none;
+    }
+}
 
+/* Extra small devices (phones, 480px and down) */
+@media (max-width: 480px) {
+    /* Even more compact layout */
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .form-container {
+        padding: 15px 10px;
+    }
+    
+    .professional-card {
+        min-width: 90vw;
+    }
+    
+    /* WhatsApp button becomes icon-only to save space */
+    .whatsapp-btn {
+        padding: 12px;
+        width: auto;
+    }
+    
+    .whatsapp-btn span {
+        display: none;
+    }
+    
+    .whatsapp-btn:after {
+        content: "💬";
+        font-size: 1.2rem;
+    }
+    
+    /* Stack form actions on small screens */
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .form-actions .btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    /* Adjust search results dropdown */
+    .search-results {
+        max-height: 200px;
+    }
+}
+/* Mobile WhatsApp Button Fix */
+@media (max-width: 768px) {
+    /* Fix for WhatsApp button container */
+    .professional-chat {
+        position: relative;
+        margin-top: 20px;
+        z-index: 10;
+        width: 100%;
+    }
+    
+    /* WhatsApp button styling */
+    .whatsapp-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        text-align: center;
+        margin: 10px 0;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+    
+    /* Adjust result container padding */
+    #result-container {
+        padding-bottom: 80px; /* Extra space for buttons */
+    }
+    
+    /* Button group layout */
+    .button-group {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    /* START OVER button styling */
+    #start-over-btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+    
+    /* Additional body padding */
+    body {
+        padding-bottom: 120px; /* Adjusted for better spacing */
+    }
+}
+
+/* Extra small devices (phones under 400px) */
+@media (max-width: 400px) {
+    .whatsapp-btn {
+        font-size: 0.85rem;
+        padding: 10px;
+    }
+    
+    /* Make sure buttons don't overlap */
+    .form-actions, .button-group {
+        position: relative;
+        z-index: 100;
+    }
+    
+    /* Increase bottom padding for very small screens */
+    body {
+        padding-bottom: 150px;
+    }
+}
     </style>
 </head>
 <body>
