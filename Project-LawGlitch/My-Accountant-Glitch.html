@@ -671,6 +671,188 @@
     height: 250px;
   }
 }
+	    @media (max-width: 768px) {
+  /* Global Layout Fixes */
+  body, .container {
+    overflow-x: hidden;
+    width: 100%;
+    padding: 0.5rem;
+  }
+
+  /* Header Adjustments */
+  header {
+    flex-direction: column;
+    text-align: center;
+    padding: 1rem;
+  }
+  
+  header h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Form Elements */
+  .basic-info, .section-row {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem;
+  }
+
+  .input-group {
+    margin-bottom: 0.8rem;
+  }
+
+  /* Buttons */
+  .btn {
+    min-height: 44px;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+    width: 100%;
+    margin: 0.3rem 0;
+  }
+
+  .save-button-container, .delete-all-container {
+    padding: 1rem 0;
+  }
+
+  /* Tables */
+  table {
+    display: block;
+    overflow-x: auto;
+    font-size: 0.85rem;
+  }
+
+  th, td {
+    padding: 0.6rem;
+    min-width: 100px;
+  }
+
+  /* Sections */
+  .section {
+    padding: 1rem;
+    margin-top: 1.5rem;
+  }
+
+  .section h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1rem;
+  }
+
+  /* Tax Settings */
+  .tax-section {
+    padding: 1rem;
+  }
+
+  /* Modal Adjustments */
+  .modal-content {
+    padding: 1.5rem;
+    width: 95%;
+  }
+
+  .modal-buttons {
+    flex-direction: column;
+  }
+
+  .modal-btn {
+    width: 100%;
+    margin: 0.3rem 0;
+  }
+
+  /* Profit Modal */
+  .profit-modal-content {
+    padding: 1rem;
+    width: 95%;
+  }
+
+  .date-selection {
+    grid-template-columns: 1fr;
+  }
+
+  .financial-summary {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .highlights {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-container {
+    height: 250px;
+  }
+
+  /* Success Message */
+  .success-message {
+    width: calc(100% - 40px);
+    right: 20px;
+    left: 20px;
+    padding: 1rem;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Even smaller screens */
+  header h1 {
+    font-size: 1.3rem;
+  }
+
+  .btn {
+    font-size: 0.85rem;
+  }
+
+  .section {
+    padding: 0.8rem;
+  }
+
+  .section h2 {
+    font-size: 1.2rem;
+  }
+
+  th, td {
+    padding: 0.4rem;
+    font-size: 0.8rem;
+  }
+
+  .financial-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-card p {
+    font-size: 1.2rem;
+  }
+
+  /* Loading Screen Adjustments */
+  .loading-logo {
+    font-size: 1.5rem;
+  }
+
+  .loading-step {
+    font-size: 0.9rem;
+  }
+
+  /* Form Inputs */
+  input, select {
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+
+  /* Action Buttons */
+  .action-btn {
+    font-size: 1rem;
+    margin: 0 3px;
+  }
+}
+
+/* Special Cases for Very Small Elements */
+@media (max-width: 360px) {
+  .btn {
+    padding: 0.7rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .section h2 {
+    font-size: 1.1rem;
+  }
+}
 </style>
  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> 
   </head>
