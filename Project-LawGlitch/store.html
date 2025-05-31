@@ -1016,7 +1016,7 @@
                     const message = product.type === 'physical' 
                         ? `hello i would like to order a piece of ${product.name}`
                         : `hello i would like to order a copy of ${product.name}`;
-                    window.open(`https://wa.me/+919903144533?text=${encodeURIComponent(message)}`, '_blank');
+                    window.open(`https://wa.me/+919432352443?text=${encodeURIComponent(message)}`, '_blank');
                 });
             }
             
@@ -1162,7 +1162,7 @@
             cart.forEach(item => message += `${item.name} x ${item.quantity}\n`);
             message += `\nTotal: ₹${cart.reduce((sum, item) => sum + (parseInt(item.price) * item.quantity), 0)}`;
             
-            window.open(`https://wa.me/+919903144533?text=${encodeURIComponent(message)}`, '_blank');
+            window.open(`https://wa.me/+919432352443?text=${encodeURIComponent(message)}`, '_blank');
             closeCartModal();
         }
 
