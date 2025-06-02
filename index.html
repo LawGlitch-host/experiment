@@ -2185,6 +2185,91 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSpotlights(0);
     }
 });
+		// Fix for iframe loading and responsiveness
+document.addEventListener('DOMContentLoaded', function() {
+    // 1. Fix iframe loading issues
+    const fixIframes = function() {
+        // Select all iframes on the page
+        const iframes = document.querySelectorAll('iframe');
+        
+        iframes.forEach(iframe => {
+            // Ensure iframe has proper attributes
+            if (!iframe.hasAttribute('loading')) {
+                iframe.setAttribute('loading', 'lazy');
+            }
+            
+            // Fix for blank iframes
+            if (iframe.contentDocument && iframe.contentDocument.readyState === 'complete' && 
+                iframe.contentDocument.body.children.length === 0) {
+                iframe.src = iframe.src; // Force reload
+            }
+            
+            // Add error handling
+            iframe.onerror = function() {
+                console.log('Iframe failed to load:', iframe.src);
+                // You could add fallback content here if needed
+            };
+            
+            // Make iframes responsive
+            if (!iframe.style.width) {
+                iframe.style.width = '100%';
+            }
+            if (!iframe.style.minHeight) {
+                // Maintain aspect ratio (16:9 by default)
+                const width = iframe.offsetWidth;
+                iframe.style.minHeight = (width * 0.5625) + 'px'; // 16:9 ratio
+            }
+        });
+    };
+
+    // Run immediately
+    fixIframes();
+    
+    // Run again after a short delay to catch dynamically loaded iframes
+    setTimeout(fixIframes, 1000);
+    
+    // Fix for cross-origin iframe issues
+    window.addEventListener('message', function(e) {
+        // Handle postMessage communications if needed
+        console.log('Received message from iframe:', e.data);
+    });
+});
+
+// Fallback for browsers that block iframes
+function checkIframeBlocking() {
+    const testIframe = document.createElement('iframe');
+    testIframe.style.display = 'none';
+    testIframe.src = 'about:blank';
+    document.body.appendChild(testIframe);
+    
+    setTimeout(function() {
+        try {
+            const blocked = testIframe.contentWindow === null || 
+                            testIframe.contentDocument === null;
+            
+            if (blocked) {
+                console.warn('Iframes are being blocked by browser settings');
+                // Replace iframes with fallback content
+                document.querySelectorAll('iframe').forEach(iframe => {
+                    const fallback = document.createElement('div');
+                    fallback.innerHTML = `
+                        <div style="background:#f0f0f0;padding:20px;border:1px solid #ccc;">
+                            <p>Content blocked by browser settings</p>
+                            <a href="${iframe.src}" target="_blank">Open content in new tab</a>
+                        </div>
+                    `;
+                    iframe.parentNode.replaceChild(fallback, iframe);
+                });
+            }
+            document.body.removeChild(testIframe);
+        } catch(e) {
+            console.error('Iframe check failed:', e);
+        }
+    }, 100);
+}
+
+// Run the check
+checkIframeBlocking();
 </script>
 </body>
 </html>
