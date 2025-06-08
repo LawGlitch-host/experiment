@@ -843,41 +843,14 @@
         }
 
        /* SECTION: Services - Enhanced */
-.services {
-    padding: 80px 0;
-    background-color: var(--black);
-    overflow: hidden;
-}
-
-.service-item {
-    max-width: 1200px;
-    margin: 0 auto 80px;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    min-height: 400px; /* Ensure minimum height */
-}
-
-.service-text {
-    padding: 30px;
-    order: 1;
-    z-index: 3;
-    background: linear-gradient(
-        to right, 
-        rgba(0, 0, 0, 0.9) 0%, 
-        rgba(0, 0, 0, 0.7) 50%, 
-        transparent 100%
-    );
-    border-left: 3px solid var(--neon-blue);
-    margin-bottom: 20px; /* Added spacing */
-}
-
 .service-image {
     order: 2;
     width: 100%;
-    height: 400px; /* Fixed height */
+    height: 400px; /* Fixed height can be adjusted */
     position: relative;
     overflow: hidden;
+    border: 1px solid var(--neon-blue);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
 }
 
 .service-image iframe {
@@ -887,28 +860,17 @@
     background: var(--dark-gray);
 }
 
-/* Remove the duplicate image styles */
+/* Remove the image styles completely */
 .service-image img {
-    display: none; /* We're using iframes instead */
+    display: none;
 }
 
-/* Mobile Responsiveness */
+/* Make iframes responsive on mobile */
 @media (max-width: 768px) {
-    .service-item {
-        min-height: 300px;
-        margin-bottom: 50px;
-    }
-    
-    .service-text {
-        padding: 20px;
-        background: rgba(0, 0, 0, 0.8);
-    }
-    
     .service-image {
         height: 300px;
     }
 }
-
 /* Parallax Effect */
 .service-image::before {
     content: "";
@@ -1581,7 +1543,7 @@
 		<a href="Project-LawGlitch/hire-professionals.html" class="open-btn">Open</a>
             </div>
             <div class="service-image">
-                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/hire-professionals">
+                <iframe src="Project-LawGlitch/hire-professionals"></iframe>
             </div>
         </div>
 
@@ -1592,7 +1554,7 @@
             <a href="Project-LawGlitch/store.html" class="open-btn">Open</a>
 	    </div>
             <div class="service-image">
-                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/store">
+                    <iframe src="Project-LawGlitch/store"></iframe>
             </div>
         </div>
 
@@ -1603,7 +1565,7 @@
             <a href="Project-LawGlitch/evidence-tracker.html" class="open-btn">Open</a>
 	    </div>
             <div class="service-image">
-                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/evidence-tracker">
+                <iframe src="Project-LawGlitch/evidence-tracker"></iframe>
             </div>
         </div>
 
@@ -1617,7 +1579,7 @@
 				<a href="Project-LawGlitch/Armoury.html" class="open-btn">Open</a>
             </div>
             <div class="service-image">
-                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/Armoury">">
+                <iframe src="Project-LawGlitch/Armoury">"></iframe>
             </div>
         </div>
     </section>
