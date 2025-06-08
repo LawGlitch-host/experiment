@@ -843,14 +843,41 @@
         }
 
        /* SECTION: Services - Enhanced */
+.services {
+    padding: 80px 0;
+    background-color: var(--black);
+    overflow: hidden;
+}
+
+.service-item {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    min-height: 400px; /* Ensure minimum height */
+}
+
+.service-text {
+    padding: 30px;
+    order: 1;
+    z-index: 3;
+    background: linear-gradient(
+        to right, 
+        rgba(0, 0, 0, 0.9) 0%, 
+        rgba(0, 0, 0, 0.7) 50%, 
+        transparent 100%
+    );
+    border-left: 3px solid var(--neon-blue);
+    margin-bottom: 20px; /* Added spacing */
+}
+
 .service-image {
     order: 2;
     width: 100%;
-    height: 400px; /* Fixed height can be adjusted */
+    height: 400px; /* Fixed height */
     position: relative;
     overflow: hidden;
-    border: 1px solid var(--neon-blue);
-    box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
 }
 
 .service-image iframe {
@@ -860,17 +887,28 @@
     background: var(--dark-gray);
 }
 
-/* Remove the image styles completely */
+/* Remove the duplicate image styles */
 .service-image img {
-    display: none;
+    display: none; /* We're using iframes instead */
 }
 
-/* Make iframes responsive on mobile */
+/* Mobile Responsiveness */
 @media (max-width: 768px) {
+    .service-item {
+        min-height: 300px;
+        margin-bottom: 50px;
+    }
+    
+    .service-text {
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.8);
+    }
+    
     .service-image {
         height: 300px;
     }
 }
+
 /* Parallax Effect */
 .service-image::before {
     content: "";
@@ -1543,7 +1581,7 @@
 		<a href="Project-LawGlitch/hire-professionals.html" class="open-btn">Open</a>
             </div>
             <div class="service-image">
-                <iframe src="Project-LawGlitch/hire-professionals"></iframe>
+                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/hire-professionals">
             </div>
         </div>
 
@@ -1554,7 +1592,7 @@
             <a href="Project-LawGlitch/store.html" class="open-btn">Open</a>
 	    </div>
             <div class="service-image">
-                    <iframe src="Project-LawGlitch/store"></iframe>
+                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/store">
             </div>
         </div>
 
@@ -1565,7 +1603,7 @@
             <a href="Project-LawGlitch/evidence-tracker.html" class="open-btn">Open</a>
 	    </div>
             <div class="service-image">
-                <iframe src="Project-LawGlitch/evidence-tracker"></iframe>
+                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/evidence-tracker">
             </div>
         </div>
 
@@ -1579,7 +1617,7 @@
 				<a href="Project-LawGlitch/Armoury.html" class="open-btn">Open</a>
             </div>
             <div class="service-image">
-                <iframe src="Project-LawGlitch/Armoury">"></iframe>
+                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/Armoury">">
             </div>
         </div>
     </section>
@@ -2278,7 +2316,37 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSpotlights(0);
     }
 });
-
+		// Corrected iframe loading script (uses existing data-src paths)
+// Corrected iframe loading script
+document.addEventListener('DOMContentLoaded', () => {
+    const serviceImages = document.querySelectorAll('.service-image');
+    
+    serviceImages.forEach(container => {
+        const img = container.querySelector('img');
+        if (!img || !img.dataset.src) return;
+        
+        const fullPath = img.dataset.src;
+        
+        const iframe = document.createElement('iframe');
+        iframe.src = fullPath;
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
+        iframe.style.minHeight = '400px';
+        
+        // Error handling
+        iframe.onerror = function() {
+            this.style.backgroundColor = 'var(--dark-gray)';
+            this.style.display = 'flex';
+            this.style.justifyContent = 'center';
+            this.style.alignItems = 'center';
+            this.innerHTML = '<p>Preview unavailable</p>';
+        };
+        
+        container.innerHTML = '';
+        container.appendChild(iframe);
+    });
+});
 </script>
 </body>
 </html>
