@@ -2316,37 +2316,7 @@ document.addEventListener('DOMContentLoaded', function() {
         updateSpotlights(0);
     }
 });
-		// Corrected iframe loading script (uses existing data-src paths)
-// Corrected iframe loading script
-document.addEventListener('DOMContentLoaded', () => {
-    const serviceImages = document.querySelectorAll('.service-image');
-    
-    serviceImages.forEach(container => {
-        const img = container.querySelector('img');
-        if (!img || !img.dataset.src) return;
-        
-        const fullPath = img.dataset.src;
-        
-        const iframe = document.createElement('iframe');
-        iframe.src = fullPath;
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
-        iframe.style.minHeight = '400px';
-        
-        // Error handling
-        iframe.onerror = function() {
-            this.style.backgroundColor = 'var(--dark-gray)';
-            this.style.display = 'flex';
-            this.style.justifyContent = 'center';
-            this.style.alignItems = 'center';
-            this.innerHTML = '<p>Preview unavailable</p>';
-        };
-        
-        container.innerHTML = '';
-        container.appendChild(iframe);
-    });
-});
+
 </script>
 </body>
 </html>
