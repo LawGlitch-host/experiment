@@ -842,70 +842,141 @@
             box-shadow: 0 0 30px var(--neon-blue);
         }
 
-        /* SECTION: Services */
-        .services {
-            padding: 100px 20px;
-            background-color: var(--black);
-        }
+       /* SECTION: Services - Enhanced */
+.services {
+    padding: 80px 0;
+    background-color: var(--black);
+    overflow: hidden; /* Prevents parallax overflow issues */
+}
 
-        .service-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 80px;
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+.service-item {
+    max-width: 1200px;
+    margin: 0 auto 80px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
 
-        .service-text {
-            flex: 1;
-            padding: 20px;
-        }
+.service-text {
+    padding: 30px;
+    order: 1;
+    z-index: 3; /* Ensures text stays above gradients */
+    background: linear-gradient(
+        to right, 
+        rgba(0, 0, 0, 0.9) 0%, 
+        rgba(0, 0, 0, 0.7) 50%, 
+        transparent 100%
+    );
+    border-left: 3px solid var(--neon-blue);
+}
 
-        .service-image {
-            flex: 1;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            min-height: 400px;
-            position: relative;
-            overflow: hidden;
-            border-radius: 5px;
-        }
+.service-image img {
+    width: 100%;
+    height: 100vh; /* Full viewport height (changed from auto) */
+    min-height: 100vh; /* Forces full height (replaced 400px) */
+    max-height: none; /* Removes previous 80vh limit */
+    object-fit: cover;
+    transform: translateY(0);
+    transition: transform 0.5s ease, filter 0.4s ease;
+    filter: brightness(0.9);
+    will-change: transform;
+}
 
-        .service-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
+/* Parallax Effect */
+.service-image::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to bottom, 
+        transparent 60%, 
+        rgba(0, 0, 0, 0.8) 100%
+    );
+    z-index: 2;
+}
 
-        .service-image img:hover {
-            transform: scale(1.05);
-            box-shadow: var(--glow);
-        }
+.service-image img {
+    width: 100%;
+    height: auto;
+    min-height: 400px;
+    max-height: 80vh;
+    object-fit: cover;
+    transform: translateY(0); /* For parallax */
+    transition: transform 0.5s ease, filter 0.4s ease;
+    filter: brightness(0.9);
+    will-change: transform; /* Optimizes parallax performance */
+}
 
-        .service-item:nth-child(even) .service-text {
-            order: 2;
-        }
+/* Hover + Parallax Scroll Effects */
+.service-item:hover img {
+    transform: scale(1.02);
+    filter: brightness(1.1);
+}
 
-        .service-item:nth-child(even) .service-image {
-            order: 1;
-        }
+/* Button Styling - Enhanced */
+.open-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: var(--neon-blue);
+    color: var(--black);
+    border: 2px solid var(--neon-blue);
+    border-radius: 30px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    box-shadow: 0 0 20px rgba(0, 180, 255, 0.7);
+    position: relative;
+    overflow: hidden;
+}
 
-        .service-item h3 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            color: var(--neon-blue);
-            text-shadow: var(--text-glow);
-        }
+.open-btn::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        to bottom right,
+        transparent 45%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 55%
+    );
+    transform: rotate(30deg);
+    transition: all 0.6s ease;
+}
 
-        .service-item p {
-            font-size: 1.1rem;
-            line-height: 1.6;
-            margin-bottom: 20px;
-        }
+.open-btn:hover {
+    background: transparent;
+    color: var(--neon-blue);
+    box-shadow: 0 0 30px var(--neon-blue);
+    transform: translateY(-3px);
+}
+
+.open-btn:hover::before {
+    left: 100%;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .service-text {
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.8); /* Solid bg for readability */
+    }
+    .service-image img {
+        max-height: 60vh;
+    }
+    .open-btn {
+        padding: 10px 25px;
+    }
+}
+
 
         /* SECTION: Revolution Footer */
         .revolution {
@@ -1480,6 +1551,7 @@
             <div class="service-text">
                 <h3>Hire Professionals</h3>
                 <p>Instantly connect with elite lawyers, accountants, advisors, and secretaries. Fill out a quick form, hit WhatsApp, and get help in minutes.</p>
+		<a href="Project-LawGlitch/hire-professionals.html" class="open-btn">Open</a>
             </div>
             <div class="service-image">
                 <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/hire-professionals">
@@ -1490,7 +1562,8 @@
             <div class="service-text">
                 <h3>Freedom Arsenal</h3>
                 <p>Equip yourself with the tools for fearless living—secure devices, privacy tactics, encrypted storage, and underground resources.</p>
-            </div>
+            <a href="Project-LawGlitch/store.html" class="open-btn">Open</a>
+	    </div>
             <div class="service-image">
                 <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/store">
             </div>
@@ -1500,44 +1573,25 @@
             <div class="service-text">
                 <h3>Evidence Tracker</h3>
                 <p>Store and timestamp your most valuable data—chats, calls, videos, and voice memos. Perfect for defending yourself in legal ambushes.</p>
-            </div>
+            <a href="Project-LawGlitch/evidence-tracker.html" class="open-btn">Open</a>
+	    </div>
             <div class="service-image">
                 <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/evidence-tracker">
             </div>
         </div>
 
-        <div class="service-item">
+       <div class="service-item">
             <div class="service-text">
-                <h3>My Accountant Glitch</h3>
+                <h3>Armoury🛠</h3>
                 <p>Bored of spreadsheets? Try our gamified digital command center:</p>
                 <p>My Accountant Glitch → Track money like a pro.</p>
                 <p>replace your old unreliable daily transaction books with the new Gamified solution.</p>
-				<p> Just hit all your transactions. income recieved,expense paid, losses ALL OF IT, and save them</p>
-				<p>With a single 'click' export the yearly data as .json and give them to the reporter for making financial statements, you need to submit</p>
+				<p>Track investments and business like a pro.. all organised with simple reliable tools</p>
+				<a href="Project-LawGlitch/Armoury.html" class="open-btn">Open</a>
             </div>
             <div class="service-image">
-                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/My-Accountant-Glitch">">
+                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/Armoury">">
             </div>
-        </div>
-		  <div class="service-item">
-            <div class="service-text">
-                <h3>Business Glitch</h3>
-                <p>This isn't software — it's a war map for business dominance. From clients to employees to inventory, it's all gamified.</p>
-            </div>
-            <div class="service-image">
-                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/Business-Glitch">
-            </div>
-        </div>
-		  <div class="service-item">
-            <div class="service-text">
-                <h3>Freedom Glitch</h3>
-                <p>Your money deserves freedom too. Glitch the system: smartly invest, diversify like the 1%, and plan for the future — all while dodging inflation and tax traps..</p>
-            </div>
-            <div class="service-image">
-                <img src="PLACEHOLDER.png" data-src="Project-LawGlitch/Freedom-Glitch">
-            </div>
-        </div>
-		  
         </div>
     </section>
 
